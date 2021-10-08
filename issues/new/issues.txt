@@ -1,0 +1,33 @@
+1_Front
+    1_Setup Bootstrap
+    2_Create menu
+    3_Create homepage
+        1_Button arrow-down "go to tricks" with anchor to tricks section
+        2_Cards representing each trick
+        3_Button arrow-up "go to tricks" with anchor to tricks section when at bottom of page
+    4_Create trick detail page (CRUD:READ)
+        1_Show trick infos
+            1_Show main image
+            2_Show related media (after click on button on mobile)
+            3_Show description
+            4_Display update and delete buttons
+        2_Leave a comment
+        3_Discussion display
+            1_Message display
+            2_User avatar display
+    5_Create trick modification page (CRUD:UPDATE)
+        1_Reuse detailpage
+        2_Add groups dropdown
+        3_Add delete and save buttons
+    6_User registration page
+    7_User login page
+    8_forgot password page
+
+2_Back
+    1_Initialize symfony web project
+    _User management
+    _Tricks management
+        _Get tricks from internet
+        _Populate database with tricks
+    _
+
