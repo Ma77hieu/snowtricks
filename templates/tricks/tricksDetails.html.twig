@@ -1,0 +1,83 @@
+{% extends 'generic/base.html.twig' %}
+{% block title %}Homepage-Details tricks{% endblock %}
+{% block body %}
+    <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
+        <p class="h1 text-secondary p-1 bg-white" >NOM DU TRICK.</p>
+        <a href="#tricks_list_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
+        {#  <img class="img-fluid" src="https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80">#}
+    </div>
+    <div class="container" id="medias">
+        {#Tricks cards #}
+        <div class="row">
+            {% for media in medias %}
+            <div class="col-2">
+                <div class="card my-2">
+                    {% if videos %}
+                    <video controls="" src="https://codingyaar.com/wp-content/uploads/video-in-bootstrap-card.mp4" class="bs-card-video"></video>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if images %}
+                        <div class="card-img">
+                            <img class="img-fluid" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
+                        </div>
+                        {% endif %}
+                        <div class="row text-white mt-3 d-flex align-baseline">
+                            <div class="col-6 text-center">
+                                <p class="btn btn-secondary text-center rounded"><i class="far fa-edit"></i></p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p class="btn btn-danger text-center rounded"><i class="far fa-trash-alt"></i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Trick description -->
+    <div class="container border-1 my-2" id="trick_description">
+        <p>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+            eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+            aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est,
+            qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam
+            aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+            commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum
+            fugiat quo voluptas nulla pariatur?
+        </p>
+    </div>
+    <!-- Trick tags -->
+    <div class="container" id="trick_tags">
+        <div class="d-flex justify-content-around">
+            {% for tag in tags %}
+                <div class=" px-3 my-3 border border-primary rounded text-primary">une caractéristique</div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr class="my-2 w-50 mx-auto">
+    <!-- leave a comment -->
+    <div class="container ">
+        <form name="leave_comment">
+            <div class="form-row">
+                <div class="form-group col-md-7">
+                    <input type="text" class="form-control" name="watch" value="" placeholder="watch">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">$</div>
+                        </div>
+                        <input type="text" class="form-control" id="price0" placeholder="Price (optional)">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <hr class="my-2 w-50 mx-auto">
+
+
+
+{% endblock %}
+

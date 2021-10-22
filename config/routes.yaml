@@ -1,3 +1,7 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\HomepageController::index
+
+TricksDetails.show:
+    path: /trickdetails
+    controller: App\Controller\DetailspageController::show
