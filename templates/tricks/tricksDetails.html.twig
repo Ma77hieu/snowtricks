@@ -1,13 +1,14 @@
 {% extends 'generic/base.html.twig' %}
 {% block title %}Homepage-Details tricks{% endblock %}
 {% block body %}
+    <!-- Trick hero section -->
     <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
         <p class="h1 text-secondary p-1 bg-white" >NOM DU TRICK.</p>
-        <a href="#tricks_list_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
+        <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
         {#  <img class="img-fluid" src="https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80">#}
     </div>
-    <div class="container" id="medias">
-        {#Tricks cards #}
+    <div class="container" id="medias_section">
+        <!-- Medias cards -->
         <div class="row">
             {% for media in medias %}
             <div class="col-2">
@@ -36,7 +37,7 @@
         </div>
     </div>
     <!-- Trick description -->
-    <div class="container border-1 my-2" id="trick_description">
+    <div class="container border-1 my-3" id="trick_description">
         <p>
             Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
             eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
@@ -51,31 +52,53 @@
     <div class="container" id="trick_tags">
         <div class="d-flex justify-content-around">
             {% for tag in tags %}
-                <div class=" px-3 my-3 border border-primary rounded text-primary">une caractéristique</div>
+                <div class=" px-3 py-2 my-3 border border-primary rounded text-primary">une caractéristique</div>
             {% endfor %}
         </div>
     </div>
-    <hr class="my-2 w-50 mx-auto">
+    <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
     <!-- leave a comment -->
-    <div class="container ">
-        <form name="leave_comment">
-            <div class="form-row">
-                <div class="form-group col-md-7">
-                    <input type="text" class="form-control" name="watch" value="" placeholder="watch">
+    <div class="container my-4 py-4" >
+        <form name="leave_comment" class="">
+            <div class="row mx-auto">
+                <div class="col-7">
+                    <input type="text" class="form-control" placeholder="Votre commentaire">
                 </div>
 
-                <div class="form-group col-md-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">$</div>
-                        </div>
-                        <input type="text" class="form-control" id="price0" placeholder="Price (optional)">
-                    </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Commenter</button>
                 </div>
             </div>
         </form>
     </div>
-    <hr class="my-2 w-50 mx-auto">
+    <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
+    <!-- tricks related comments -->
+    <div class="container my-4 py-3" id="trick_tags">
+        {% for comment in comments %}
+            <div class="row my-3 d-flex justify-content-center">
+                <div class="col-1 mx-auto my-auto text-center">
+                    <img class="img-fluid rounded-circle my-auto" src="https://www.w3schools.com/howto/img_avatar2.png" style="max-width:50px">
+                    <div class="text-secondary">User name</div>
+                </div>
+                <div class="col-11 p-1">
+                    <div class="border h-100 p-2">tecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                        aspernatur aut odit aut fugit, sed quia consequuntur magni dolores e
+                        aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+                        commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum
+                        fugiat quo voluptas nulla pariatur?</div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row my-2 d-flex position-relative text-center" style="min-height: 40px;">
+            <div class="text-center">
+                <a href="#tricks_list_section" class="btn btn-info "> Plus de commentaires</a>
+            </div>
+            <div class="position-absolute top-0 start-50">
+                <a href="#medias_section" class="btn btn-info "> <i class="fas fa-arrow-up"></i> </a>
+            </div>
+        </div>
+    </div>
+
 
 
 

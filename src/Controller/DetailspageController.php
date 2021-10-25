@@ -15,13 +15,15 @@ class DetailspageController extends AbstractController
         $medias=[1,1,1,1,1];
         $videos=null;//tests purpose
         $images=1;//tests purpose
-        $tags=[1,1,1];
+        $tags=[1,1,1];//tests purpose
+        $comments=[1,1,1];//tests purpose
         return $this->render('tricks/tricksDetails.html.twig',[
             'tricks'=>$tricks,
             'medias'=>$medias,
             'videos'=>$videos,
             'images'=>$images,
-            'tags'=>$tags]);
+            'tags'=>$tags,
+            'comments'=>$comments]);
     }
 
 }
