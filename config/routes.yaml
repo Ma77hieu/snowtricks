@@ -5,3 +5,7 @@ index:
 TricksDetails.show:
     path: /trickdetails
     controller: App\Controller\DetailspageController::show
+
+TricksDetails.edit:
+    path: /trickEdition
+    controller: App\Controller\DetailspageController::edit

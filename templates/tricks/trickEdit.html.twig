@@ -5,22 +5,16 @@
     <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
         <p class="h1 text-secondary p-1 bg-white" >NOM DU TRICK.</p>
         <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
-        <!-- Insert edit/delete buttons if edition route is called -->
-        {% if edition_mode %}
-            <div class="col-1 position-absolute top-0 end-0">
-                {% include "generic/_EditDeleteIcons.html.twig" %}
-            </div>
-        {% endif %}
         {#  <img class="img-fluid" src="https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80">#}
     </div>
     <div class="container" id="medias_section">
         <!-- Medias cards -->
-        <div class="row d-flex justify-content-center">
+        <div class="row">
             {% for media in medias %}
             <div class="col-2">
                 <div class="card my-2">
                     {% if videos %}
-                    <video controls="" src="https://codingyaar.com/wp-content/uploads/video-in-bootstrap-card.mp4" class=""></video>
+                    <video controls="" src="https://codingyaar.com/wp-content/uploads/video-in-bootstrap-card.mp4" class="bs-card-video"></video>
                     {% endif %}
                     <div class="card-body">
                         {% if images %}
@@ -28,19 +22,15 @@
                             <img class="img-fluid" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
                         </div>
                         {% endif %}
-                        {% if edition_mode %}
-                        {% include "generic/_EditDeleteIcons.html.twig" %}
-                        {% endif %}
+                        {% include "property/_allPropertyCards.html.twig" %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    <!-- Show Trick description -->
-    {% if not edition_mode %}
+    <!-- Trick description -->
     <div class="container border-1 my-3" id="trick_description">
-
         <p>
             Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
             eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
@@ -74,55 +64,8 @@
             </div>
         </form>
     </div>
-    {% endif %}
-    <!-- Modify trick description -->
-    {% if edition_mode %}
-    <div class="container mt-4 py-4" >
-        <form name="update description" class="text-center">
-            <label for="trickDescription" class="form-label text-left">Description de la figure</label>
-            <textarea id="trickDescription" class="form-control" style="resize:none;overflow-y: scroll;" aria-label="Description de la figure" placeholder="{{description}}"></textarea>
-            <select class="form-select form-select-lg my-3" aria-label=".form-select-lg example">
-                <option selected>Choisissez le groupe de la figure</option>
-                {% for group in groups %}
-                    <option value="{{ group }}">{{ group }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="btn btn-primary my-3">Enregistrer changements</button>
-        </form>
-    </div>
-    <!-- Delete trick button with confirmation modal -->
-    <!-- Button trigger modal -->
-    <div class="row d-flex justify-content-center mb-2">
-        <div class="col-3 text-center">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-                Supprimer la figure
-            </button>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmationModalLabel">Etes vous sur?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        {#<span aria-hidden="true">&times;</span>#}
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Voulez vous vraiment supprimer cette figure? Cette action est irréversible.</br> Tous les commentaires, photos et vidéos seront perdus!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Confirmer suppression</button>
-                    <button type="button" class="btn btn-secondary">Ne pas supprimer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if not edition_mode %}
-    <!-- trick comments -->
     <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
+    <!-- tricks related comments -->
     <div class="container my-4 py-3" id="trick_tags">
         {% for comment in comments %}
             <div class="row my-3 d-flex justify-content-center">
@@ -148,6 +91,9 @@
             </div>
         </div>
     </div>
-    {% endif %}
+
+
+
+
 {% endblock %}
 
