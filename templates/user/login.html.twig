@@ -1,0 +1,31 @@
+{% extends 'generic/base.html.twig' %}
+{% block title %}Modifier figure {% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row vh-80 d-flex justify-content-center ">
+            <div class="col-4 vh-50 border rounded m-3 p-3">
+                <form>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    {#<div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div>#}
+                    <div class="mb-4 text-center">
+                        <a href="#" class="mb-3">Mot de passe oublié</a>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Connexion</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

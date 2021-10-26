@@ -2,10 +2,34 @@ index:
     path: /
     controller: App\Controller\HomepageController::index
 
-TricksDetails.show:
-    path: /trickdetails
-    controller: App\Controller\DetailspageController::show
+Trick.show:
+    path: /trick
+    controller: App\Controller\TrickController::show
 
-TricksDetails.edit:
+Trick.edit:
     path: /trickEdition
-    controller: App\Controller\DetailspageController::edit
+    controller: App\Controller\TrickController::edit
+
+Trick.create:
+    path: /trickCreation
+    controller: App\Controller\TrickController::create
+
+User.register:
+    path: /enregistrement
+    controller: App\Controller\UserController::create
+
+User.login:
+    path: /connexion
+    controller: App\Controller\UserController::login
+
+User.logout:
+    path: /deconnexion
+    controller: App\Controller\UserController::logout
+
+User.forgot:
+    path: /mdpOublie
+    controller: App\Controller\UserController::forgot
+
+User.password.reset:
+    path: /changerMdp
+    controller: App\Controller\UserController::reset
