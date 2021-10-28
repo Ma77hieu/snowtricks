@@ -27,6 +27,18 @@ class Media
      */
     private $IsMain;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=MediaType::class, inversedBy="media")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $mediaType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $trick;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +64,30 @@ class Media
     public function setIsMain(bool $IsMain): self
     {
         $this->IsMain = $IsMain;
+
+        return $this;
+    }
+
+    public function getMediaType(): ?MediaType
+    {
+        return $this->mediaType;
+    }
+
+    public function setMediaType(?MediaType $mediaType): self
+    {
+        $this->mediaType = $mediaType;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
 
         return $this;
     }
