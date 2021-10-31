@@ -20,11 +20,11 @@ User.register:
 
 User.login:
     path: /connexion
-    controller: App\Controller\UserController::login
+    controller: App\Controller\LoginController::login
 
 User.logout:
     path: /deconnexion
-    controller: App\Controller\UserController::logout
+    methods: GET
 
 User.forgot:
     path: /mdpOublie
