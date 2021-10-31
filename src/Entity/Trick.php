@@ -22,22 +22,22 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Description;
+    private $description;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $CreationDate;
+    private $creationDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $ModificationDate;
+    private $modificationDate;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Name;
+    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="trick", orphanRemoval=true)
@@ -67,48 +67,48 @@ class Trick
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
-    public function setDescription(string $Description): self
+    public function setDescription(string $description): self
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }
 
     public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->CreationDate;
+        return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $CreationDate): self
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
-        $this->CreationDate = $CreationDate;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
 
     public function getModificationDate(): ?\DateTimeInterface
     {
-        return $this->ModificationDate;
+        return $this->modificationDate;
     }
 
-    public function setModificationDate(\DateTimeInterface $ModificationDate): self
+    public function setModificationDate(\DateTimeInterface $modificationDate): self
     {
-        $this->ModificationDate = $ModificationDate;
+        $this->modificationDate = $modificationDate;
 
         return $this;
     }
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }

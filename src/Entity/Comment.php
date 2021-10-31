@@ -20,17 +20,17 @@ class Comment
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $CommentText;
+    private $commentText;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $CreationDate;
+    private $creationDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $ModificationDate;
+    private $modificationDate;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comment")
@@ -51,36 +51,36 @@ class Comment
 
     public function getCommentText(): ?string
     {
-        return $this->CommentText;
+        return $this->commentText;
     }
 
-    public function setCommentText(string $CommentText): self
+    public function setCommentText(string $commentText): self
     {
-        $this->CommentText = $CommentText;
+        $this->commentText = $commentText;
 
         return $this;
     }
 
     public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->CreationDate;
+        return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $CreationDate): self
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
-        $this->CreationDate = $CreationDate;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
 
     public function getModificationDate(): ?\DateTimeInterface
     {
-        return $this->ModificationDate;
+        return $this->modificationDate;
     }
 
-    public function setModificationDate(?\DateTimeInterface $ModificationDate): self
+    public function setModificationDate(?\DateTimeInterface $modificationDate): self
     {
-        $this->ModificationDate = $ModificationDate;
+        $this->modificationDate = $modificationDate;
 
         return $this;
     }

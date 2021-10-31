@@ -20,12 +20,12 @@ class Media
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Url;
+    private $url;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $IsMain;
+    private $isMain;
 
     /**
      * @ORM\ManyToOne(targetEntity=MediaType::class, inversedBy="media")
@@ -46,24 +46,24 @@ class Media
 
     public function getUrl(): ?string
     {
-        return $this->Url;
+        return $this->url;
     }
 
-    public function setUrl(string $Url): self
+    public function setUrl(string $url): self
     {
-        $this->Url = $Url;
+        $this->url = $url;
 
         return $this;
     }
 
     public function getIsMain(): ?bool
     {
-        return $this->IsMain;
+        return $this->isMain;
     }
 
-    public function setIsMain(bool $IsMain): self
+    public function setIsMain(bool $isMain): self
     {
-        $this->IsMain = $IsMain;
+        $this->isMain = $isMain;
 
         return $this;
     }
