@@ -16,7 +16,7 @@ Trick.create:
 
 User.register:
     path: /enregistrement
-    controller: App\Controller\UserController::create
+    controller: App\Controller\RegistrationController::register
 
 User.login:
     path: /connexion
@@ -33,3 +33,7 @@ User.forgot:
 User.password.reset:
     path: /changerMdp
     controller: App\Controller\UserController::reset
+
+User.verify.email:
+    path: /verify/email
+    controller: App\Controller\RegistrationController::verifyUserEmail

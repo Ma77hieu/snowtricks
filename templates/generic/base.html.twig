@@ -28,6 +28,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     {% if not app.user %}
+                    {#{% if not is_granted('IS_AUTHENTICATED_FULLY') %}#}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('User.login') }}">Connexion</a>
                     </li>
@@ -44,6 +45,7 @@
                         </ul>
                     </li>
                     {% if app.user %}
+                    {#{% if is_granted('IS_AUTHENTICATED_FULLY') %}#}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ logout_path(key = null) }}">Deconnexion</a>
                     </li>
