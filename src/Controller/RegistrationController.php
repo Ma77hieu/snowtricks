@@ -30,14 +30,6 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted())
-        {
-            echo('Is the submitted form valid?');
-            var_dump($form->isValid());
-            echo('form errors');
-            var_dump($form->getErrors(true)->__toString());
-        }
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -48,8 +40,6 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            echo('user password');
-            var_dump($user->getPassword());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -60,7 +50,7 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('mat.ortlieb@gmail.com', 'Snowtricks mail bot'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Merci de confirmer votre Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
