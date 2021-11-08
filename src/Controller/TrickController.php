@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Group;
+use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,9 +35,40 @@ class TrickController extends AbstractController
             'edition_mode'=>$edition_mode]);
     }
 
-    public function edit(): Response
+    public function edit(int $trickId, Request $request): Response
     {
-        $tricks=1;
+        $entityManager = $this->getDoctrine()->getManager();
+        $trick = $entityManager->find(Trick::class,$trickId);
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted())
+        {
+            /*            echo ("form valide?");
+                        var_dump($form->isValid());*/
+            if ($form->isValid())
+            {
+                /*$entityManager = $this->getDoctrine()->getManager();*/
+                $entityManager->merge($trick);
+                $entityManager->flush();
+                $this->addFlash('success', 'Trick mis à jour.');
+                return $this->redirectToRoute('index');
+            }
+            else
+            {
+                $errors = $form->getErrors();
+                $this->addFlash('danger', "$errors");
+            }
+        }
+        $repository = $this->getDoctrine()->getRepository(Media::class);
+        $medias = $repository->findAll(['trickId' => $trickId]);
+
+        return $this->render('tricks/trickEdition.html.twig',[
+            'trickForm' => $form->createView(),
+            'medias' => $medias,
+            'trick' => $trick]);
+    }
+        /*$tricks=1;
         $user_logged_in=null;
         $medias=[1,1,1,1,1];
         $videos=1;//tests purpose
@@ -57,26 +89,26 @@ class TrickController extends AbstractController
             'edition_mode'=>$edition_mode,
             'description'=>$description,
             'groups'=>$groupes]);
-    }
+    }*/
 
     public function create(Request $request): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
-        echo ("form soumis?");
-        var_dump($form->isSubmitted());
+/*        echo ("form soumis?");
+        var_dump($form->isSubmitted());*/
 
 
         if ($form->isSubmitted())
         {
-            echo ("form valide?");
-            var_dump($form->isValid());
+/*            echo ("form valide?");
+            var_dump($form->isValid());*/
             if ($form->isValid())
             {
-                // temporary until group management coded, get group with id 1
+
                 $entityManager = $this->getDoctrine()->getManager();
-                $trickGroup = $entityManager->find(Group::class, 1);
+                $trickGroup = $entityManager->find(Group::class, $form["trickGroup"]->getData());
                 //define the group to which the trick is linked
                 $trick->setTrickGroup($trickGroup);
                 //set the creation date to the current date type

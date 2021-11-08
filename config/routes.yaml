@@ -7,7 +7,7 @@ Trick.show:
     controller: App\Controller\TrickController::show
 
 Trick.edit:
-    path: /trickEdition
+    path: /trickEdition/{trickId}
     controller: App\Controller\TrickController::edit
 
 Trick.create:
