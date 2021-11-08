@@ -1,0 +1,29 @@
+{% extends 'generic/base.html.twig' %}
+{% block title %}Ajouter figure{% endblock %}
+{% block body %}
+    <div class="container" id="trick_creation">
+        <!-- Medias cards -->
+        <div class="row d-flex justify-content-center">
+                <div class="col-10">
+                    {{ form_start(trickForm) }}
+                    {{ form_row(trickForm.name) }}
+                    {{ form_row(trickForm.description) }}
+                    {{ form_row(trickForm.trickGroup) }}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Creer trick</button>
+                    </div>
+                    {{ form_end(trickForm) }}
+                </div>
+        </div>
+    </div>
+    <div class="container" id="trick_creation">
+        <!-- Medias cards -->
+        <div class="row d-flex justify-content-center">
+            <div class="col-2">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
