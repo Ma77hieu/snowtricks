@@ -3,7 +3,7 @@ index:
     controller: App\Controller\HomepageController::index
 
 Trick.show:
-    path: /trick
+    path: /trick/{trickId}
     controller: App\Controller\TrickController::show
 
 Trick.edit:

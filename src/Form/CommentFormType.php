@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,10 +14,10 @@ class CommentFormType extends AbstractType
     {
         $builder
             ->add('commentText')
-            ->add('creationDate')
-            ->add('modificationDate')
-            ->add('trick')
-            ->add('author')
+            ->add('creationDate',HiddenType::class)
+            ->add('modificationDate', HiddenType::class)
+            ->add('trick', HiddenType::class)
+            ->add('author', HiddenType::class)
         ;
     }
 

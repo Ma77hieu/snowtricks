@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Group;
 use App\Entity\Media;
+use App\Entity\User;
+use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,25 +17,56 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
-    public function show(): Response
+    public function show(int $trickId, Request $request): Response
     {
-        $tricks=1;
-        $user_logged_in=null;
-        $medias=[1,1,1,1,1];
-        $videos=1;//tests purpose
-        $images=null;//tests purpose
-        $tags=[1,1,1];//tests purpose
-        $comments=[1,1,1];//tests purpose
-        $edition_mode=false;
+        $entityManager = $this->getDoctrine()->getManager();
+        $trick = $entityManager->find(Trick::class,$trickId);
+        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
+        $form = $this->createForm(CommentFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted())
+        {
+            /*            echo ("form valide?");
+                        var_dump($form->isValid());*/
+            if ($form->isValid())
+            {
+                /*$entityManager = $this->getDoctrine()->getManager();*/
+                $comment = new Comment();
+                $userId=$request->getUser()->getId();
+                $comment->setCreationDate(new \DateTime());
+                $comment->setTrick($trickId);
+                $comment->setAuthor($userId);
+                $entityManager->persist($comment);
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre commentaire a été ajouté');
+                return $this->render('tricks/trickDetails.html.twig');
+            }
+            else
+            {
+                $errors = $form->getErrors();
+                $this->addFlash('danger', "$errors");
+            }
+        }
+        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $medias = $mediaRepository->findAll(['trickId' => $trickId]);
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comments = $commentRepository->findAll(['trick' => $trickId]);
+        $tags=[
+            'date de creation'=>$trick->getCreationDate()->format('Y-m-d H:i:s'),
+            'groupe'=>$group->getName(),
+        ];
+        if ($trick->getModificationDate()) {
+            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
+            $tags['date de modification']=$trickModifDate;
+        }
+
         return $this->render('tricks/trickDetails.html.twig',[
-            'tricks'=>$tricks,
-            'medias'=>$medias,
-            'videos'=>$videos,
-            'images'=>$images,
-            'tags'=>$tags,
-            'comments'=>$comments,
-            'user_logged_in'=>$user_logged_in,
-            'edition_mode'=>$edition_mode]);
+            'commentForm' => $form->createView(),
+            'medias' => $medias,
+            'comments' => $comments,
+            'trick' => $trick,
+            'tags'=>$tags]);
     }
 
     public function edit(int $trickId, Request $request): Response
@@ -68,28 +102,6 @@ class TrickController extends AbstractController
             'medias' => $medias,
             'trick' => $trick]);
     }
-        /*$tricks=1;
-        $user_logged_in=null;
-        $medias=[1,1,1,1,1];
-        $videos=1;//tests purpose
-        $images=null;//tests purpose
-        $tags=[1,1,1];//tests purpose
-        $comments=[1,1,1];//tests purpose
-        $edition_mode=true;
-        $description="tecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores e aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?";
-        $groupes=['Groupe A','Groupe B','Groupe C'];
-        return $this->render('tricks/trickEdition.html.twig',[
-            'tricks'=>$tricks,
-            'medias'=>$medias,
-            'videos'=>$videos,
-            'images'=>$images,
-            'tags'=>$tags,
-            'comments'=>$comments,
-            'user_logged_in'=>$user_logged_in,
-            'edition_mode'=>$edition_mode,
-            'description'=>$description,
-            'groups'=>$groupes]);
-    }*/
 
     public function create(Request $request): Response
     {
