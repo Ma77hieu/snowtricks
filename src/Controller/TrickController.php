@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
 use App\Entity\Media;
 use App\Entity\User;
@@ -15,14 +16,20 @@ use App\Repository\PropertyRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+
+
 class TrickController extends AbstractController
 {
+
+
     public function show(int $trickId, Request $request): Response
     {
+        $comment = new Comment();
         $entityManager = $this->getDoctrine()->getManager();
         $trick = $entityManager->find(Trick::class,$trickId);
         $group = $entityManager->find(Group::class, $trick->getTrickGroup());
-        $form = $this->createForm(CommentFormType::class);
+        $form = $this->createForm(CommentFormType::class,$comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted())
@@ -31,16 +38,15 @@ class TrickController extends AbstractController
                         var_dump($form->isValid());*/
             if ($form->isValid())
             {
-                /*$entityManager = $this->getDoctrine()->getManager();*/
-                $comment = new Comment();
-                $userId=$request->getUser()->getId();
+                $user = $this->getUser();
+
                 $comment->setCreationDate(new \DateTime());
-                $comment->setTrick($trickId);
-                $comment->setAuthor($userId);
+                $comment->setTrick($trick);
+                $comment->setAuthor($user);
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été ajouté');
-                return $this->render('tricks/trickDetails.html.twig');
+                $this->addFlash('success', 'Votre commentaire a été ajouté');/*
+                return $this->render('tricks/trickDetails.html.twig');*/
             }
             else
             {
