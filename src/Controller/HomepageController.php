@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\PropertyRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomepageController extends AbstractController
 {
     public function index(): Response
     {
-        $list=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-        return $this->render('tricks/tricksList.html.twig',['list'=>$list]);
+        $trickRepository = $this->getDoctrine()->getRepository(Trick::class);
+        $tricks = $trickRepository->findAll();
+        return $this->render('tricks/tricksList.html.twig',['tricks'=>$tricks]);
     }
 
 }

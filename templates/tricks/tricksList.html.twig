@@ -9,15 +9,15 @@
     <div class="container" id="tricks_list_section">
         {#Tricks cards #}
         <div class="row">
-            {% for article in list %}
+            {% for trick in tricks %}
             <div class="col-2">
                 <div class="card my-2">
                     <div class="card-body">
                         <div class="card-img">
-                            <img class="img-fluid" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
+                            <img class="img-fluid" alt="image principale de la figure" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
                         </div>
                         <h5 class="card-title">
-                            <a href="#">Titre</a>
+                            <a href="#">{{ trick.name }}</a>
                         </h5>
                         {% if app.user %}
                         <div class="row text-white mt-3 d-flex align-baseline">
