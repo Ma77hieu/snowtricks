@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\TrickServices;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
 use App\Entity\Media;
@@ -12,7 +13,6 @@ use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\PropertyRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -22,6 +22,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TrickController extends AbstractController
 {
 
+    public function create(Request $request): Response
+    {
+        $trick = new Trick();
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
+        $entityManager = $this->getDoctrine()->getManager();
+        $trickService= new TrickServices();
+        $serviceReturn=$trickService->createTrick($entityManager,$trick,$form);
+        return $this->controllerReturn($serviceReturn);
+    }
 
     public function show(int $trickId, Request $request): Response
     {
@@ -109,42 +119,25 @@ class TrickController extends AbstractController
             'trick' => $trick]);
     }
 
-    public function create(Request $request): Response
+    public function controllerReturn($input)
     {
-        $trick = new Trick();
-        $form = $this->createForm(TrickFormType::class, $trick);
-        $form->handleRequest($request);
-/*        echo ("form soumis?");
-        var_dump($form->isSubmitted());*/
-
-
-        if ($form->isSubmitted())
-        {
-/*            echo ("form valide?");
-            var_dump($form->isValid());*/
-            if ($form->isValid())
-            {
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $trickGroup = $entityManager->find(Group::class, $form["trickGroup"]->getData());
-                //define the group to which the trick is linked
-                $trick->setTrickGroup($trickGroup);
-                //set the creation date to the current date type
-                $trick->setCreationDate(new \DateTime());
-                //save the trick into database
-                $entityManager2 = $this->getDoctrine()->getManager();
-                $entityManager2->persist($trick);
-                $entityManager2->flush();
-                $this->addFlash('success', 'Trick créé.');
-                return $this->redirectToRoute('index');
-            }
-                else
-                {
-                    $errors = $form->getErrors();
-                    $this->addFlash('danger', "$errors");
-                }
+        $returnType=$input['returnType'];
+        $path=$input['path'];
+        $flashType=$input['flashType'];
+        $flashMessage=$input['flashMessage'];
+        $data=$input['data'];
+        if ($flashMessage){
+            $this->addFlash($flashType, $flashMessage);
         }
-        return $this->render('tricks/trickCreation.html.twig',[
-            'trickForm' => $form->createView()]);
+        if ($returnType==='render'){
+            return $this->render($path,$data);
+        }
+        if ($returnType==='redirect'){
+            return $this->redirectToRoute($path,$data);
+        }
+        else{
+            $this->addFlash("danger", "une erreur interne est survenue, vous avez été redirigé vers la page d'accueil");
+            return $this->redirectToRoute('index');
+        }
     }
 }
