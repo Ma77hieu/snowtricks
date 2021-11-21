@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
 use App\Entity\Media;
@@ -12,14 +13,18 @@ use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\PropertyRepository;
+use App\Repository\MediaRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class TrickServices
+
+class TrickServices extends AbstractController
 {
-    public function createTrick($entityManager, $trick, $form)
+    public function createTrick($entityManager,$trick,$form):array
     {
+        /*$trick = new Trick();
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
+        $entityManager = $this->getDoctrine()->getManager();*/
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trickGroup = $entityManager->find(Group::class, $form["trickGroup"]->getData());
@@ -51,4 +56,52 @@ class TrickServices
             'data' => ['trickForm' => $form->createView()]];
         return $serviceAnswer;
     }
+
+    /*public function showTrick($entityManager, $trick, $group, $form, $trickId, $comment): array
+    {
+
+        if ($form->isSubmitted()) {
+
+            if ($form->isValid()) {
+                $user = $this->getUser();
+
+                $comment->setCreationDate(new \DateTime());
+                $comment->setTrick($trick);
+                $comment->setAuthor($user);
+                $entityManager->persist($comment);
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre commentaire a été ajouté');
+            } else {
+                $errors = $form->getErrors();
+                $this->addFlash('danger', "$errors");
+            }
+        }
+        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $medias = $mediaRepository->findByTrickId($trickId);
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comments = $commentRepository->findByTrickId($trickId);
+        $tags = [
+            'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
+            'groupe' => $group->getName(),
+        ];
+        if ($trick->getModificationDate()) {
+            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
+            $tags['date de modification'] = $trickModifDate;
+        }
+
+        $returnData= [
+            'commentForm' => $form->createView(),
+            'medias' => $medias,
+            'comments' => $comments,
+            'trick' => $trick,
+            'tags' => $tags,];
+
+        $serviceAnswer = ['returnType' => 'render',
+            'path' => 'tricks/trickCreation.html.twig',
+            'flashType' => 'success',
+            'flashMessage' => null,
+            'data' => $returnData];
+
+        return $serviceAnswer;
+    }*/
 }

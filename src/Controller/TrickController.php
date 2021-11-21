@@ -30,6 +30,8 @@ class TrickController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $trickService= new TrickServices();
         $serviceReturn=$trickService->createTrick($entityManager,$trick,$form);
+        /*$trickService= new TrickServices();
+        $serviceReturn=$trickService->createTrick($request);*/
         return $this->controllerReturn($serviceReturn);
     }
 
@@ -41,11 +43,12 @@ class TrickController extends AbstractController
         $group = $entityManager->find(Group::class, $trick->getTrickGroup());
         $form = $this->createForm(CommentFormType::class,$comment);
         $form->handleRequest($request);
-
+        $trickService= new TrickServices();
+        /*$serviceReturn=$trickService->showTrick($entityManager,$trick,$group,$form,$trickId,$comment);
+        return $this->controllerReturn($serviceReturn);*/
         if ($form->isSubmitted())
         {
-            /*            echo ("form valide?");
-                        var_dump($form->isValid());*/
+
             if ($form->isValid())
             {
                 $user = $this->getUser();
@@ -55,8 +58,8 @@ class TrickController extends AbstractController
                 $comment->setAuthor($user);
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été ajouté');/*
-                return $this->render('tricks/trickDetails.html.twig');*/
+                $this->addFlash('success', 'Votre commentaire a été ajouté');
+
             }
             else
             {
@@ -65,9 +68,9 @@ class TrickController extends AbstractController
             }
         }
         $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $mediaRepository->findAll(['trickId' => $trickId]);
+        $medias = $mediaRepository->findByTrickId($trickId);
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
-        $comments = $commentRepository->findAll(['trick' => $trickId]);
+        $comments = $commentRepository->findByTrickId($trickId);
         $tags=[
             'date de creation'=>$trick->getCreationDate()->format('Y-m-d H:i:s'),
             'groupe'=>$group->getName(),
