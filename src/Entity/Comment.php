@@ -44,6 +44,11 @@ class Comment
      */
     private $author;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $isValidated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +110,18 @@ class Comment
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getIsValidated(): ?bool
+    {
+        return $this->isValidated;
+    }
+
+    public function setIsValidated(bool $isValidated): self
+    {
+        $this->isValidated = $isValidated;
 
         return $this;
     }
