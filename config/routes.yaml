@@ -37,3 +37,7 @@ User.password.reset:
 User.verify.email:
     path: /verify/email
     controller: App\Controller\RegistrationController::verifyUserEmail
+
+Comments.validation:
+    path: /admin/commentsValidation
+    controller: App\Controller\CommentsController::index
