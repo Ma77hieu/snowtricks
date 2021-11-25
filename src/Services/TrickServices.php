@@ -57,6 +57,7 @@ class TrickServices extends AbstractController
         return $serviceAnswer;
     }
 
+
     /*public function showTrick($entityManager, $trick, $group, $form, $trickId, $comment): array
     {
 

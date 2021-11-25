@@ -21,20 +21,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
+    /**
+     * @var TrickServices
+     */
+    private TrickServices $trickServices;
 
+    /**
+     * @param TrickServices $trickServices
+     */
+    public function __construct(TrickServices $trickServices)
+    {
+        $this->trickServices = $trickServices;
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function create(Request $request): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
         $entityManager = $this->getDoctrine()->getManager();
-        $trickService= new TrickServices();
-        $serviceReturn=$trickService->createTrick($entityManager,$trick,$form);
+        $serviceReturn=$this->trickServices->createTrick($entityManager,$trick,$form);
         /*$trickService= new TrickServices();
         $serviceReturn=$trickService->createTrick($request);*/
         return $this->controllerReturn($serviceReturn);
     }
 
+    /**
+     * @param int $trickId
+     * @param Request $request
+     * @return Response
+     */
     public function show(int $trickId, Request $request): Response
     {
         $comment = new Comment();
@@ -88,6 +108,11 @@ class TrickController extends AbstractController
             'tags'=>$tags]);
     }
 
+    /**
+     * @param int $trickId
+     * @param Request $request
+     * @return Response
+     */
     public function edit(int $trickId, Request $request): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -122,6 +147,10 @@ class TrickController extends AbstractController
             'trick' => $trick]);
     }
 
+    /**
+     * @param $input
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function controllerReturn($input)
     {
         $returnType=$input['returnType'];
