@@ -126,7 +126,8 @@ class TrickController extends AbstractController
                         var_dump($form->isValid());*/
             if ($form->isValid())
             {
-                /*$entityManager = $this->getDoctrine()->getManager();*/
+                $entityManager = $this->getDoctrine()->getManager();
+                $trick->setModificationDate(new \DateTime());
                 $entityManager->merge($trick);
                 $entityManager->flush();
                 $this->addFlash('success', 'Trick mis à jour.');
@@ -138,13 +139,17 @@ class TrickController extends AbstractController
                 $this->addFlash('danger', "$errors");
             }
         }
-        $repository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $repository->findAll(['trickId' => $trickId]);
+        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $medias = $mediaRepository->findBy(['trick' => $trickId]);
+        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
+        $groups = $groupRepository->findAll();
 
+        /*var_dump($groups);die;*/
         return $this->render('tricks/trickEdition.html.twig',[
             'trickForm' => $form->createView(),
             'medias' => $medias,
-            'trick' => $trick]);
+            'trick' => $trick,
+            'groups' => $groups]);
     }
 
     /**

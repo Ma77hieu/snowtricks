@@ -23,7 +23,7 @@ class MediaRepository extends ServiceEntityRepository
       * @return Media[] Returns an array of Media objects
       */
 
-    public function findByTrickId($value)
+    public function findByTrickId($value): array
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.trick = :val')
