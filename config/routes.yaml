@@ -41,3 +41,7 @@ User.verify.email:
 Comments.validation:
     path: /admin/commentsValidation
     controller: App\Controller\CommentsController::index
+
+Media.create:
+    path: /addMedia/{trickId}
+    controller: App\Controller\MediaController::create

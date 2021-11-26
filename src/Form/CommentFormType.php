@@ -14,8 +14,8 @@ class CommentFormType extends AbstractType
     {
         $builder
             ->add('commentText')
-            ->add('creationDate',HiddenType::class)
-            ->add('modificationDate', HiddenType::class)
+            /*->add('creationDate',HiddenType::class)
+            ->add('modificationDate', HiddenType::class)*/
             ->add('trick', HiddenType::class)
             ->add('author', HiddenType::class)
         ;
