@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use function PHPUnit\Framework\isEmpty;
 
 
 class MediaController extends AbstractController
@@ -27,7 +28,7 @@ class MediaController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $image = $form->get('url')->getData();
-                // this condition is needed because the 'brochure' field is not required
+                // this condition is needed because the 'url' field is not required
                 // so the PDF file must be processed only when a file is uploaded
                 if ($image) {
                     $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
@@ -45,9 +46,9 @@ class MediaController extends AbstractController
                         // ... handle exception if something happens during file upload
                         $this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:".$e);
                     }
-                    /*if (not $e){
-
-                    }*/
+                    if (!isset($e)){
+                        $this->addFlash("success", "L'image a été enregistrée");
+                    }
 
                     // updates the 'imagename' property to store the PDF file name
                     // instead of its contents
@@ -58,6 +59,7 @@ class MediaController extends AbstractController
                 $media->setTrick($trick);
                 $entityManager->persist($media);
                 $entityManager->flush();
+                return $this->redirectToRoute('index');
             }
         }
         return $this->render('media/mediaCreation.html.twig', [

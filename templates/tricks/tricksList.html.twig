@@ -14,7 +14,15 @@
                 <div class="card my-2">
                     <div class="card-body">
                         <div class="card-img">
-                            <img class="img-fluid" alt="image principale de la figure" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
+                            {% if trick.id in mainMediasId %}
+                                {% for media in mainMedias %}
+                                    {% if media.trick.id==trick.id %}
+                                        <img class="img-fluid" alt="image principale de la figure" src="{{ asset('uploads/images/')}}{{ media.url }}">
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <img class="img-fluid" alt="image principale de la figure" src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
+                            {% endif %}
                         </div>
                         <h5 class="card-title">
                             <a href="#">{{ trick.name }}</a>

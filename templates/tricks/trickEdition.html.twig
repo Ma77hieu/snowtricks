@@ -4,7 +4,7 @@
     <!-- Trick hero section -->
     {% for media in medias %}
         {% if media.isMain %}
-            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('{{ media.url }}') no-repeat;background-size:100% auto;">
+            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/')}}{{ media.url }}') no-repeat;background-size:100% auto;">
                 <p class="h1 text-secondary p-1 bg-white" >{{ trick.name }}.</p>
                 <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
                 <!-- Insert edit/delete buttons -->
