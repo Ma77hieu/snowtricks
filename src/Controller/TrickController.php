@@ -76,9 +76,10 @@ class TrickController extends AbstractController
                 $comment->setCreationDate(new \DateTime());
                 $comment->setTrick($trick);
                 $comment->setAuthor($user);
+                $comment->setIsValidated(false);
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été ajouté');
+                $this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');
 
             }
             else

@@ -25,7 +25,7 @@
                             {% endif %}
                         </div>
                         <h5 class="card-title">
-                            <a href="#">{{ trick.name }}</a>
+                            <a href="{{ path('Trick.show', {trickId:trick.id}) }}">{{ trick.name }}</a>
                         </h5>
                         {% if app.user %}
                         <div class="row text-white mt-3 d-flex align-baseline">
