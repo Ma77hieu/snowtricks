@@ -8,8 +8,16 @@
                     <img class="img-fluid rounded-circle my-auto" src="https://www.w3schools.com/howto/img_avatar2.png" style="max-width:50px">
                     <div class="text-secondary">{{ comment.author.username }}</div>
                 </div>
-                <div class="col-11 p-1">
+                <div class="col-7 p-1">
                     <div class="border h-100 p-2">{{ comment.commentText }}</div>
+                </div>
+                <div class="col-2 text-center">
+                    <div class="col-6 text-center text-white my-1">
+                        <a class="btn btn-success text-center rounded" href="{{ path('Comment.validate', {commentId:comment.id}) }}"><i class="fas fa-check"></i></a>
+                    </div>
+                    <div class="col-6 text-center my-1">
+                        <a class="btn btn-danger text-center rounded"href="{{ path('Comment.delete', {commentId:comment.id}) }}"><i class="far fa-trash-alt"></i></a>
+                    </div>
                 </div>
             </div>
         {% endfor %}

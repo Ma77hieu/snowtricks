@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
@@ -17,13 +20,30 @@ use App\Repository\MediaRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 
-class CommentsServices extends AbstractController
+class CommentsServices
 {
-    public function validateComments($commentRepository):array
+    /**
+     * @var EntityManagerInterface
+     */
+    private EntityManagerInterface $em;
+
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+    public function validateComments($commentRepository,$commentId):array
     {
         /*$comment=new Comment();*/
-
-        $comments = $commentRepository->findByValidationStatus('false');
+        $em=$this->em->getDoctrine()->getManager();
+        $commentToValidate=$commentRepository->find($commentId);
+        $commentToValidate->setIsValidated(true);
+        $em->persist($commentToValidate);
+        $em->flush();
+        $relatedTrick=$commentToValidate->getTrick()->getName();
+        $unvalidatedComments = $commentRepository->findByValidationStatus('false');
         /*if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trickGroup = $entityManager->find(Comment::class, $form["trickGroup"]->getData());
@@ -51,8 +71,8 @@ class CommentsServices extends AbstractController
         $serviceAnswer = ['returnType' => 'render',
             'path' => 'comments/commentsValidation.html.twig',
             'flashType' => 'success',
-            'flashMessage' => null,
-            'data' => ['unvalidatedComments' => $comments]];
+            'flashMessage' => "le commentaire Id $commentId a été validé pour le trick $relatedTrick",
+            'data' => ['unvalidatedComments'=>$unvalidatedComments]];
         return $serviceAnswer;
     }
 

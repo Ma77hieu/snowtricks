@@ -42,6 +42,14 @@ Comments.validation:
     path: /admin/commentsValidation
     controller: App\Controller\CommentsController::index
 
+Comment.validate:
+    path: /admin/validateComment/{commentId}
+    controller: App\Controller\CommentsController::validate
+
+Comment.delete:
+    path: /admin/deleteComment/{commentId}
+    controller: App\Controller\CommentsController::delete
+
 Media.create:
     path: /addMedia/{trickId}
     controller: App\Controller\MediaController::create
