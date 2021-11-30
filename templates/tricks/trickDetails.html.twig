@@ -2,9 +2,11 @@
 {% block title %}Details figure{% endblock %}
 {% block body %}
     <!-- Trick hero section -->
-    {% for media in medias %}
-        {% if media.isMain %}
-            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/')}}{{ media.url }}') no-repeat;background-size:100% auto;">
+        {% if mainMediaUrl %}
+            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/')}}{{ mainMediaUrl }}') no-repeat;background-size:100% auto;">
+        {% else %}
+                <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
+        {% endif%}
                 <p class="h1 text-secondary p-1 bg-white" >{{ trick.name }}.</p>
                 <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
                 <!-- Insert edit/delete buttons -->
@@ -12,8 +14,7 @@
                     {% include "generic/_EditDeleteIcons.html.twig" %}
                 </div>
             </div>
-        {% endif%}
-    {% endfor%}
+
     <div class="container" id="medias_section">
         <!-- Medias cards -->
         <div class="row d-flex justify-content-center">

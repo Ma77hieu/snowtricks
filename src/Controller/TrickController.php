@@ -90,6 +90,12 @@ class TrickController extends AbstractController
         }
         $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
         $medias = $mediaRepository->findByTrickId($trickId);
+        $mainMediaUrl=null;
+        foreach ($medias as $media){
+            if($media->getIsMain()){
+                $mainMediaUrl=$media->getUrl();
+            }
+        }
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
         $comments = $commentRepository->findByTrickId($trickId);
         $tags=[
@@ -106,7 +112,8 @@ class TrickController extends AbstractController
             'medias' => $medias,
             'comments' => $comments,
             'trick' => $trick,
-            'tags'=>$tags]);
+            'tags'=>$tags,
+            'mainMediaUrl'=>$mainMediaUrl]);
     }
 
     /**
