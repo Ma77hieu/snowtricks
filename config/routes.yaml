@@ -53,3 +53,11 @@ Comment.delete:
 Media.create:
     path: /addMedia/{trickId}
     controller: App\Controller\MediaController::create
+
+Media.update:
+    path: /updateMedia/{mediaId}
+    controller: App\Controller\MediaController::update
+
+Media.delete:
+    path: /deleteMedia/{mediaId}
+    controller: App\Controller\MediaController::delete

@@ -68,4 +68,21 @@ class MediaController extends AbstractController
             'mediaForm' => $form->createView(),
         ]);
     }
+
+    public function delete(int $mediaId, Request $request){
+        $currentPage=$request->getUri();
+        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $media = $mediaRepository->find($mediaId);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($media);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Vous avez supprimé une image');
+        return $this->redirectToRoute('index');
+    }
+
+    public function update(int $mediaId){
+        $entityManager = $this->getDoctrine()->getManager();
+
+    }
 }
