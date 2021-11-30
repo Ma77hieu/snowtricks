@@ -17,10 +17,12 @@ class LoginController extends AbstractController
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        if ($error) {
+            $this->addFlash("danger", "Nom d'utilisateur ou mot de passe incorrects");
+        }
 
           return $this->render('user/login.html.twig', [
               'last_username' => $lastUsername,
-              'error' => $error,
           ]);
     }
 }

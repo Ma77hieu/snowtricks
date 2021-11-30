@@ -2,9 +2,6 @@
 {% block title %} Se connecter {% endblock %}
 {% block body %}
     <div class="container">
-        {% if error %}
-            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
         <div class="row vh-80 d-flex justify-content-center ">
             <div class="col-4 vh-50 border rounded m-3 p-3">
                 <form action="{{ path('User.login') }}" method="post">
