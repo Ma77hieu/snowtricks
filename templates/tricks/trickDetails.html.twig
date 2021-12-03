@@ -8,12 +8,11 @@
                 <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
         {% endif%}
                     {% if app.user %}
-
                 <p class="h1 text-secondary p-1 bg-white" >{{ trick.name }}.</p>
                 <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
                 <!-- Insert edit/delete buttons -->
                 <div class="col-1 position-absolute top-0 end-0">
-                    {#<div class="col-2 text-center">#}<div class="row mt-2">
+                    <div class="row mt-2">
                         <div class="col-6 text-center text-white my-1">
                             <a class="btn btn-secondary text-center rounded" href="{{ path('Media.create', {trickId:trick.id}) }}"><i class="far fa-edit"></i></a>
                         </div>
@@ -22,12 +21,13 @@
                             <a class="btn btn-danger text-center rounded" href="{{ path('Media.delete', {mediaId:mainMediaId}) }}"><i class="far fa-trash-alt"></i></a>
                             {% endif%}
                         </div>
-                        {#</div>#}</div>
+                    </div>
                 </div>
                     {% endif%}
             </div>
+                {% include "media/_mediasOfOneTrick.html.twig" %}
 
-    <div class="container" id="medias_section">
+    {#<div class="container" id="medias_section">
         <!-- Medias cards -->
         <div class="row d-flex justify-content-center">
             {% for media in medias %}
@@ -48,7 +48,7 @@
                                 {% if app.user %}
                                 <div class="row text-white mt-3 d-flex align-baseline">
                                     <div class="col-6 text-center">
-                                        <a class="btn btn-secondary text-center rounded" href="{#{{ path('Media.update', {mediaId:media.id}) }}#}#"><i class="far fa-edit"></i></a>
+                                        <a class="btn btn-secondary text-center rounded" href="#}{#{{ path('Media.update', {mediaId:media.id}) }}#}{##"><i class="far fa-edit"></i></a>
                                     </div>
                                     <div class="col-6 text-center">
                                         <a class="btn btn-danger text-center rounded" href="{{ path('Media.delete', {mediaId:media.id}) }}"><i class="far fa-trash-alt"></i></a>
@@ -61,7 +61,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-    </div>
+    </div>#}
                 <div class="row mt-2 d-flex justify-content-center">
                     <div class="col-3 d-flex justify-content-center">
                         <a class="btn btn-primary text-center rounded p-2" href="{{ path('Media.create', {trickId:trick.id}) }}">Ajouter un media</a>
