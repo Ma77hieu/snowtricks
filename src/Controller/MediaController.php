@@ -47,19 +47,22 @@ class MediaController extends AbstractController
                         $this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:".$e);
                     }
                     if (!isset($e)){
+                        $media->setIsMain($form["isMain"]->getData());
+                        $media->setMediaType($form["mediaType"]->getData());
+                        $media->setTrick($trick);
+                        $media->setUrl($newFilename);
+                        $entityManager->persist($media);
+                        $entityManager->flush();
                         $this->addFlash("success", "L'image a été enregistrée");
+                        return $this->redirectToRoute('Trick.show',['trickId'=>$trickId]);
                     }
 
-                    // updates the 'imagename' property to store the PDF file name
-                    // instead of its contents
-                    $media->setUrl($newFilename);
                 }
-                $media->setIsMain($form["isMain"]->getData());
-                $media->setMediaType($form["mediaType"]->getData());
-                $media->setTrick($trick);
-                $entityManager->persist($media);
-                $entityManager->flush();
-                return $this->redirectToRoute('index');
+                else {
+                    $this->addFlash("danger", "Merci de choisir une image à uploader avant de valider");
+                    return $this->redirectToRoute('Media.create',['trickId'=>$trickId]);
+                }
+
             }
         }
         return $this->render('media/mediaCreation.html.twig', [

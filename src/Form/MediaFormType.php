@@ -44,7 +44,7 @@ class MediaFormType extends AbstractType
                 'mapped' => false,
 
                 // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Product details
+                // every time you edit the Media details
                 'required' => false,
 
                 // unmapped fields can't define their validation using annotations
