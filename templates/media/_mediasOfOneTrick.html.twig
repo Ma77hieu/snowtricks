@@ -3,21 +3,23 @@
     <div class="row d-flex justify-content-center">
         {% for media in medias %}
             {% if not media.isMain %}
-                <div class="col-4">
-                    <div class="card my-2 h-100">
-                        <div class="card-body">
-                            {% if media.mediaType.id == 2 %}
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="{{ media.url }}" allowfullscreen></iframe>
-                                </div>
-                            {% endif %}
-                            {% if media.mediaType.id == 1 and not media.isMain %}
-                                <div class="card-img">
-                                    <img class="img-fluid" src="{{ asset('uploads/images/')}}{{ media.url }}">
-                                </div>
-                            {% endif %}
+                <div class="col-4 d-flex">
+                    <div class="card my-2 align-self-stretch">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="row d-flex justify-content-center m-auto">
+                                {% if media.mediaType.id == 2 %}
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <iframe class="embed-responsive-item" src="{{ media.url }}" allowfullscreen></iframe>
+                                    </div>
+                                {% endif %}
+                                {% if media.mediaType.id == 1 and not media.isMain %}
+                                    <div class="card-img">
+                                        <img class="img-fluid" src="{{ asset('uploads/images/')}}{{ media.url }}">
+                                    </div>
+                                {% endif %}
+                            </div>
                             {% if app.user %}
-                                <div class="row text-white mt-3 d-flex align-baseline">
+                                <div class="row text-white mt-3 d-flex align-items-center">
                                     <div class="col-6 text-center">
                                         <a class="btn btn-secondary text-center rounded" href="{#{{ path('Media.update', {mediaId:media.id}) }}#}#"><i class="far fa-edit"></i></a>
                                     </div>
