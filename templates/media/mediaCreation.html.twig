@@ -1,17 +1,28 @@
 {% extends 'generic/base.html.twig' %}
 {% block title %}Ajouter media{% endblock %}
 {% block body %}
-    <h1> Ajouter un media au trick: {{ trickName }}</h1>
+    {% if mediaType==1 %}
+    <h1> Ajouter une image au trick: {{ trickName }}</h1>
+    {% endif %}
+    {% if mediaType==1 %}
+        <h1> Ajouter une video au trick: {{ trickName }}</h1>
+    {% endif %}
     <div class="container" id="trick_creation">
         <div class="row d-flex justify-content-center">
             <div class="col-10">
                 {{ form_start(mediaForm) }}
                 {{ form_row(mediaForm.url) }}
-                {{ form_row(mediaForm.mediaType) }}
+                {% if mediaType==1 %}
                 {{ form_row(mediaForm.isMain) }}
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Ajouter media</button>
+                    <button type="submit" class="btn btn-primary">Ajouter image</button>
                 </div>
+                {% endif %}
+                {% if mediaType==2 %}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Ajouter vidéo</button>
+                    </div>
+                {% endif %}
                 {{ form_end(mediaForm) }}
             </div>
         </div>

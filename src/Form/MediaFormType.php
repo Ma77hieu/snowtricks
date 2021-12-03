@@ -19,54 +19,54 @@ class MediaFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            /*->add('url')*/
-            ->add('isMain', CheckboxType::class, [
-                'label'    => 'Est ce l\'image principale de la figure?',
-                'required' => false,
-            ])
-            /*->add('mediaType')*/
-            ->add('mediaType', EntityType::class, [
-                // looks for choices from this entity
-                'class' => MediaType::class,
+        if ($options['type_of_media']==2){
+            $builder
+                ->add('url')
+                /*->add('mediaType')*/
+                ->add('trick',HiddenType::class)
+            ;
+        }
+        else{
+            $builder
+                /*->add('url')*/
+                ->add('isMain', CheckboxType::class, [
+                    'label'    => 'Est ce l\'image principale de la figure?',
+                    'required' => false,
+                ])
+                /*->add('mediaType')*/
+                ->add('trick',HiddenType::class)
+                ->add('url', FileType::class, [
+                    'label' => 'Image à uploader (.jpeg, .jpg, .png)',
 
-                // uses the group.name property as the visible option string
-                'choice_label' => 'type',
+                    // unmapped means that this field is not associated to any entity property
+                    'mapped' => false,
 
-                // used to render a select box, check boxes or radios
-                'multiple' => false,
-                'expanded' => false,])
-            ->add('trick',HiddenType::class)
-            ->add('url', FileType::class, [
-                'label' => 'Image principale (.jpeg, .jpg, .png)',
+                    // make it optional so you don't have to re-upload the PDF file
+                    // every time you edit the Media details
+                    'required' => false,
 
-                // unmapped means that this field is not associated to any entity property
-                'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Media details
-                'required' => false,
-
-                // unmapped fields can't define their validation using annotations
-                // in the associated entity, so you can use the PHP constraint classes
-                'constraints' => [
-                    new File([
-                        'maxSize' => '1024k',
-                        'mimeTypes' => [
-                            'image/png',
-                            'image/jpeg',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF document',
-                    ])
-                ],
-            ])
-        ;
+                    // unmapped fields can't define their validation using annotations
+                    // in the associated entity, so you can use the PHP constraint classes
+                    'constraints' => [
+                        new File([
+                            'maxSize' => '1024k',
+                            'mimeTypes' => [
+                                'image/png',
+                                'image/jpeg',
+                            ],
+                            'mimeTypesMessage' => 'Please upload a valid PDF document',
+                        ])
+                    ],
+                ])
+            ;
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
+            'type_of_media'=>1,
         ]);
     }
 }

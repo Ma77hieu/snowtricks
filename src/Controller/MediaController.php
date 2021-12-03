@@ -17,40 +17,49 @@ use function PHPUnit\Framework\isEmpty;
 
 class MediaController extends AbstractController
 {
-    public function create(int $trickId, Request $request,SluggerInterface $slugger): Response
+    public function create(int $trickId, int $mediaType,Request $request,SluggerInterface $slugger): Response
     {
         $media = new Media();
-        $form = $this->createForm(MediaFormType::class, $media);
+        $form = $this->createForm(MediaFormType::class, $media,array('type_of_media'=>$mediaType));
         $form->handleRequest($request);
         $entityManager = $this->getDoctrine()->getManager();
         $trick= $entityManager->find(Trick::class, $trickId);
         $trickName=$trick->getName();
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $image = $form->get('url')->getData();
+                $file = $form->get('url')->getData();
                 // this condition is needed because the 'url' field is not required
                 // so the PDF file must be processed only when a file is uploaded
-                if ($image) {
-                    $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                    // this is needed to safely include the file name as part of the URL
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+                if ($file) {
+                    if ($mediaType==1){
+                        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        // this is needed to safely include the file name as part of the URL
+                        $safeFilename = $slugger->slug($originalFilename);
+                        $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-                    // Move the file to the directory where images are stored
-                    try {
-                        $image->move(
-                            $this->getParameter('images_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                        $this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:".$e);
+                        // Move the file to the directory where images are stored
+                        try {
+                            $file->move(
+                                $this->getParameter('images_directory'),
+                                $newFilename
+                            );
+                        } catch (FileException $e) {
+                            // ... handle exception if something happens during file upload
+                            $this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:".$e);
+                        }
                     }
                     if (!isset($e)){
+                        if($mediaType==1){
+                            $media->setUrl($newFilename);
+                            $media->setMediaType(1);
+                        }
+                        else if ($mediaType==2){
+                            $media->setUrl($file);
+                            $media->setMediaType(2);
+                        }
                         $media->setIsMain($form["isMain"]->getData());
                         $media->setMediaType($form["mediaType"]->getData());
                         $media->setTrick($trick);
-                        $media->setUrl($newFilename);
                         $entityManager->persist($media);
                         $entityManager->flush();
                         $this->addFlash("success", "L'image a été enregistrée");
@@ -59,7 +68,7 @@ class MediaController extends AbstractController
 
                 }
                 else {
-                    $this->addFlash("danger", "Merci de choisir une image à uploader avant de valider");
+                    $this->addFlash("danger", "Merci de choisir une image à uploader ou une url valide avant de valider");
                     return $this->redirectToRoute('Media.create',['trickId'=>$trickId]);
                 }
 
@@ -69,6 +78,7 @@ class MediaController extends AbstractController
             'controller_name' => 'MediaController',
             'trickName'=>$trickName,
             'mediaForm' => $form->createView(),
+            'mediaType'=>$mediaType,
         ]);
     }
 

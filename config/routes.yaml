@@ -51,7 +51,7 @@ Comment.delete:
     controller: App\Controller\CommentsController::delete
 
 Media.create:
-    path: /addMedia/{trickId}
+    path: /addMedia/{trickId}/{mediaType}
     controller: App\Controller\MediaController::create
 
 Media.update:
