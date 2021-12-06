@@ -22,8 +22,6 @@ class MediaFormType extends AbstractType
         if ($options['type_of_media']==2){
             $builder
                 ->add('url')
-                /*->add('mediaType')*/
-                ->add('trick',HiddenType::class)
             ;
         }
         else{
@@ -33,8 +31,6 @@ class MediaFormType extends AbstractType
                     'label'    => 'Est ce l\'image principale de la figure?',
                     'required' => false,
                 ])
-                /*->add('mediaType')*/
-                ->add('trick',HiddenType::class)
                 ->add('url', FileType::class, [
                     'label' => 'Image à uploader (.jpeg, .jpg, .png)',
 

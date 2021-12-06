@@ -15,7 +15,7 @@
                 <div class="col-1 position-absolute top-0 end-0">
                     <div class="row mt-2">
                         <div class="col-6 text-center text-white my-1">
-                            <a class="btn btn-secondary text-center rounded" href="{{ path('Media.create', {trickId:trick.id,mediaType:1}) }}"><i class="far fa-edit"></i></a>
+                            <a class="btn btn-secondary text-center rounded" href="{{ path('Media.update', {mediaId:mainMediaId}) }}"><i class="far fa-edit"></i></a>
                         </div>
                         <div class="col-6 text-center my-1">
                             {% if mainMediaId %}
