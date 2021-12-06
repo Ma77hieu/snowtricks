@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Group;
 use App\Entity\Media;
+use App\Entity\MediaType;
 use App\Entity\Trick;
 use App\Form\MediaFormType;
 use App\Form\TrickFormType;
@@ -29,8 +30,9 @@ class MediaController extends AbstractController
             if ($form->isValid()) {
                 $file = $form->get('url')->getData();
                 // this condition is needed because the 'url' field is not required
-                // so the PDF file must be processed only when a file is uploaded
+                // so the file must be processed only when a file is uploaded
                 if ($file) {
+                    //if the file is an image, we manage the uploading
                     if ($mediaType==1){
                         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                         // this is needed to safely include the file name as part of the URL
@@ -48,28 +50,42 @@ class MediaController extends AbstractController
                             $this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:".$e);
                         }
                     }
+                    //next condition is true if there was no problem during file upload or if the media is a video
                     if (!isset($e)){
                         if($mediaType==1){
                             $media->setUrl($newFilename);
-                            $media->setMediaType(1);
+                            $type= $entityManager->find(MediaType::class, $mediaType);
+                            $media->setMediaType($type);
+                            $media->setIsMain($form["isMain"]->getData());
                         }
                         else if ($mediaType==2){
+                            $urlAccepted=$this->checkVideoUrl($file);
+                            $media->setIsMain(false);
+                            if ($urlAccepted!=true){
+                                $this->addFlash("danger",
+                                    "Merci de choisir une video youtube et cliquer sur \"partager\" puis \"integrer\"  
+                                    Utilisez ensuite l'url commencant par https://www.youtube.com/embed");
+                                return $this->redirectToRoute('Media.create',[
+                                    'trickId'=>$trickId,
+                                    'mediaType'=>$mediaType]);
+                            }
                             $media->setUrl($file);
-                            $media->setMediaType(2);
+                            $type= $entityManager->find(MediaType::class, $mediaType);
+                            $media->setMediaType($type);
                         }
-                        $media->setIsMain($form["isMain"]->getData());
-                        $media->setMediaType($form["mediaType"]->getData());
                         $media->setTrick($trick);
                         $entityManager->persist($media);
                         $entityManager->flush();
-                        $this->addFlash("success", "L'image a été enregistrée");
+                        $this->addFlash("success", "Le média a été enregistré");
                         return $this->redirectToRoute('Trick.show',['trickId'=>$trickId]);
                     }
 
                 }
                 else {
                     $this->addFlash("danger", "Merci de choisir une image à uploader ou une url valide avant de valider");
-                    return $this->redirectToRoute('Media.create',['trickId'=>$trickId]);
+                    return $this->redirectToRoute('Media.create',[
+                        'trickId'=>$trickId,
+                        'mediaType'=>$mediaType]);
                 }
 
             }
@@ -97,5 +113,16 @@ class MediaController extends AbstractController
     public function update(int $mediaId){
         $entityManager = $this->getDoctrine()->getManager();
 
+    }
+
+    public function checkVideoUrl (string $url): bool
+    {
+
+        if (str_contains($url,'https://www.youtube.com/embed')){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
