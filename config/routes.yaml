@@ -46,6 +46,10 @@ Comment.validate:
     path: /admin/validateComment/{commentId}
     controller: App\Controller\CommentsController::validate
 
+Comment.update:
+    path: /updateComment/{commentId}
+    controller: App\Controller\CommentsController::update
+
 Comment.delete:
     path: /admin/deleteComment/{commentId}
     controller: App\Controller\CommentsController::delete

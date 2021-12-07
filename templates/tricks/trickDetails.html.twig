@@ -1,32 +1,37 @@
 {% extends 'generic/base.html.twig' %}
 {% block title %}Details figure{% endblock %}
 {% block body %}
-    <!-- Trick hero section -->
-        {% if mainMediaUrl %}
-            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/')}}{{ mainMediaUrl }}') no-repeat;background-size:100% auto;">
-        {% else %}
-                <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative" style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
-        {% endif%}
+<!-- Trick hero section -->
+{% if mainMediaUrl %}
+<div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative"
+     style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/') }}{{ mainMediaUrl }}') no-repeat;background-size:100% auto;">
+    {% else %}
+    <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative"
+         style="justify-content: center;align-items: center;background:url('https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80') no-repeat;background-size:100% auto;">
+        {% endif %}
 
-                <p class="h1 text-secondary p-1 bg-white" >{{ trick.name }}.</p>
-                    {% if app.user %}
-                <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i class="fas fa-arrow-down"></i> </a>
-                <!-- Insert edit/delete buttons -->
-                <div class="col-1 position-absolute top-0 end-0">
-                    <div class="row mt-2">
-                        <div class="col-6 text-center text-white my-1">
-                            <a class="btn btn-secondary text-center rounded" href="{{ path('Media.update', {mediaId:mainMediaId}) }}"><i class="far fa-edit"></i></a>
-                        </div>
-                        <div class="col-6 text-center my-1">
-                            {% if mainMediaId %}
-                            <a class="btn btn-danger text-center rounded" href="{{ path('Media.delete', {mediaId:mainMediaId}) }}"><i class="far fa-trash-alt"></i></a>
-                            {% endif%}
-                        </div>
+        <p class="h1 text-secondary p-1 bg-white">{{ trick.name }}.</p>
+        {% if app.user %}
+            <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i
+                        class="fas fa-arrow-down"></i> </a>
+            <!-- Insert edit/delete buttons -->
+            <div class="col-1 position-absolute top-0 end-0">
+                <div class="row mt-2">
+                    <div class="col-6 text-center text-white my-1">
+                        <a class="btn btn-secondary text-center rounded"
+                           href="{{ path('Media.update', {mediaId:mainMediaId}) }}"><i class="far fa-edit"></i></a>
+                    </div>
+                    <div class="col-6 text-center my-1">
+                        {% if mainMediaId %}
+                            <a class="btn btn-danger text-center rounded"
+                               href="{{ path('Media.delete', {mediaId:mainMediaId}) }}"><i class="far fa-trash-alt"></i></a>
+                        {% endif %}
                     </div>
                 </div>
-                    {% endif%}
             </div>
-                {% include "media/_mediasOfOneTrick.html.twig" %}
+        {% endif %}
+    </div>
+    {% include "media/_mediasOfOneTrick.html.twig" %}
     <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
     <!-- Show Trick description -->
     <div class="container border-1 my-3" id="trick_description">
@@ -38,15 +43,15 @@
     <div class="container" id="trick_tags">
         <div class="d-flex justify-content-around">
             {% for key, tag in tags %}
-                <div class=" px-3 py-2 my-3 border border-primary rounded text-primary">{{key}}: {{ tag }}</div>
+                <div class=" px-3 py-2 my-3 border border-primary rounded text-primary">{{ key }}: {{ tag }}</div>
             {% endfor %}
         </div>
     </div>
     <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
     <!-- leave a comment -->
-    <div class="container my-4 py-4 d-flex justify-content-center" >
+    <div class="container my-4 py-4 d-flex justify-content-center">
         {% if app.user %}
-            {#<form name="leave_comment" class="text-center ">
+            {# <form name="leave_comment" class="text-center ">
                 <div class="row">
                     <div class="col-7">
                         <input type="text" class="form-control" placeholder="Votre commentaire">
@@ -56,7 +61,7 @@
                         <button type="submit" class="btn btn-primary">Commenter</button>
                     </div>
                 </div>
-            </form>#}
+            </form> #}
             {{ form_start(commentForm) }}
             {{ form_row(commentForm.commentText) }}
             <div class="text-center">
@@ -66,7 +71,7 @@
         {% endif %}
         {% if not app.user %}
             <div class="text-center">
-                <a class="btn btn-info" href="{{ path('User.login')}}">Connectez vous pour laisser un commentaire</a>
+                <a class="btn btn-info" href="{{ path('User.login') }}">Connectez vous pour laisser un commentaire</a>
             </div>
         {% endif %}
     </div>
@@ -74,17 +79,34 @@
     <hr class="my-3 w-50 mx-auto" style="opacity:0.1">
     <div class="container my-4 py-3" id="trick_tags">
         {% for comment in comments %}
-        {% if comment.isValidated %}
-            <div class="row my-3 d-flex justify-content-center">
-                <div class="col-1 mx-auto my-auto text-center">
-                    <img class="img-fluid rounded-circle my-auto" src="https://www.w3schools.com/howto/img_avatar2.png" style="max-width:50px">
-                    <div class="text-secondary">{{ comment.author.username }}</div>
+            {% if comment.isValidated %}
+                <div class="row my-3 d-flex justify-content-center">
+                    <div class="col-1 mx-auto my-auto text-center">
+                        <img class="img-fluid rounded-circle my-auto"
+                             src="https://www.w3schools.com/howto/img_avatar2.png" style="max-width:50px">
+                        <div class="text-secondary">{{ comment.author.username }}</div>
+                    </div>
+                    <div class="col-8 p-1">
+                        <div class="border h-100 p-2">{{ comment.commentText }}</div>
+                    </div>
+                    <div class="col-2 text-center">
+                        {% if app.user %}
+                        {% if app.user.username==comment.author.username or is_granted('ROLE_ADMIN') %}
+                            <div class="col-6 text-center text-white my-1">
+                                <a class="btn btn-secondary text-center rounded"
+                                   href="{{ path('Comment.update', {commentId:comment.id}) }}"><i
+                                            class="far fa-edit"></i></a>
+                            </div>
+                            <div class="col-6 text-center my-1">
+                                <a class="btn btn-danger text-center rounded"
+                                   href="{{ path('Comment.delete', {commentId:comment.id}) }}"><i
+                                            class="far fa-trash-alt"></i></a>
+                            </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="col-11 p-1">
-                    <div class="border h-100 p-2">{{ comment.commentText }}</div>
-                </div>
-            </div>
-        {% endif %}
+            {% endif %}
         {% endfor %}
         <div class="row my-2 d-flex justify-content-center text-center position-relative">
             <div class="col-2">
@@ -98,5 +120,5 @@
         </div>
     </div>
 
-{% endblock %}
+    {% endblock %}
 

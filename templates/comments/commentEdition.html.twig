@@ -1,0 +1,17 @@
+{% extends 'generic/base.html.twig' %}
+{% block title %}Modifier commentaire {% endblock %}
+{% block body %}
+    <div class="container" id="comment_edition">
+        <div class="row d-flex">
+            <div class="col-10">
+                {{ form_start(commentEditionForm) }}
+                {{ form_row(commentEditionForm.commentText) }}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Modifier Commentaire</button>
+                    </div>
+                {{ form_end(commentEditionForm) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
