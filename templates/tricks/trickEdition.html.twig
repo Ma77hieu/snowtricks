@@ -2,32 +2,7 @@
 {% block title %}Modifier figure {% endblock %}
 {% block body %}
     <!-- Trick hero section -->
-    {% for media in medias %}
-        {% if media.isMain %}
-            <div class="container-fluid my-3 vh-100 text-center d-flex align-baseline position-relative"
-                 style="justify-content: center;align-items: center;background:url('{{ asset('uploads/images/') }}{{ media.url }}') no-repeat;background-size:100% auto;">
-                <p class="h1 text-secondary p-1 bg-white">{{ trick.name }}.</p>
-                {% if app.user %}
-                    <a href="#medias_section" class="btn btn-info position-absolute bottom-0 end-50"> <i
-                                class="fas fa-arrow-down"></i> </a>
-                    <!-- Insert edit/delete buttons -->
-                    <div class="col-1 position-absolute top-0 end-0">
-                        <div class="row mt-2">
-                            <div class="col-6 text-center text-white my-1">
-                                <a class="btn btn-secondary text-center rounded"
-                                   href="{{ path('Media.update', {mediaId:media.id}) }}"><i class="far fa-edit"></i></a>
-                            </div>
-                            <div class="col-6 text-center my-1">
-                                    <a class="btn btn-danger text-center rounded"
-                                       href="{{ path('Media.delete', {mediaId:media.id}) }}"><i
-                                                class="far fa-trash-alt"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% endfor %}
+    {% include "tricks/_heroSection.html.twig" %}
     {% include "media/_mediasOfOneTrick.html.twig" %}
     <!-- Modify trick description -->
     {% if app.user %}
