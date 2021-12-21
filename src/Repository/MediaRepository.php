@@ -35,6 +35,19 @@ class MediaRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findMainMediaWithTrickId(int $trickId): Media
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.trick = :val')
+            ->andWhere('m.isMain=true')
+            ->setParameter('val', $trickId)
+            ->orderBy('m.id', 'ASC')
+            /*->setMaxResults(10)*/
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Media
