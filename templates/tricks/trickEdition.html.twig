@@ -30,27 +30,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmationModalLabel">Etes vous sur?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            {# <span aria-hidden="true">&times;</span> #}
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Voulez vous vraiment supprimer cette figure? Cette action est irréversible.</br> Tous les
-                        commentaires, photos et vidéos seront perdus!
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Confirmer suppression</button>
-                        <button type="button" class="btn btn-secondary">Ne pas supprimer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include "tricks/_trickDeletionModal.html.twig" %}
     {% endif %}
 {% endblock %}
 

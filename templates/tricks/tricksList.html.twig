@@ -37,10 +37,12 @@
                                                         class="far fa-edit"></i></a>
                                         </div>
                                         <div class="col-6 text-center ">
-                                            <a class="btn btn-danger text-center rounded" href="#"><i
+                                            <a class="btn btn-danger text-center rounded" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i
                                                         class="far fa-trash-alt"></i></a>
                                         </div>
                                     </div>
+                                    <!-- Modal -->
+                                    {% include "tricks/_trickDeletionModal.html.twig" %}
                                 {% endif %}
                             </div>
                         </div>

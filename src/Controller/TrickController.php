@@ -163,6 +163,21 @@ class TrickController extends AbstractController
     }
 
     /**
+     * @param int $trickId
+     * @return Response
+     */
+    public function delete(int $trickId):Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $trick = $entityManager->find(Trick::class, $trickId);
+        $entityManager->remove($trick);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Vous avez supprimé un trick');
+        return $this->redirectToRoute('index');
+    }
+
+    /**
      * @param $input
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */

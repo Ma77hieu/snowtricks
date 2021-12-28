@@ -14,6 +14,10 @@ Trick.create:
     path: /trickCreation
     controller: App\Controller\TrickController::create
 
+Trick.delete:
+  path: /delete/{trickId}
+  controller: App\Controller\TrickController::delete
+
 User.register:
     path: /enregistrement
     controller: App\Controller\RegistrationController::register

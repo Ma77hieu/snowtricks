@@ -1,0 +1,21 @@
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Etes vous sur?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                Voulez vous vraiment supprimer cette figure? Cette action est irréversible.</br> Tous les
+                commentaires, photos et vidéos seront perdus!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ><a style="text-decoration: none;color:white;" href="{{ path('Trick.delete',{trickId:trick.id}) }}">Confirmer suppression</a></button>
+                <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Ne pas supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>

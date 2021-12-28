@@ -20,6 +20,13 @@ use function PHPUnit\Framework\isEmpty;
 
 class MediaController extends AbstractController
 {
+    /**
+     * @param int $trickId
+     * @param int $mediaType
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @return Response
+     */
     public function create(int $trickId, int $mediaType, Request $request, SluggerInterface $slugger): Response
     {
         $media = new Media();
@@ -89,7 +96,6 @@ class MediaController extends AbstractController
 
     public function delete(int $mediaId, Request $request)
     {
-        $currentPage = $request->getUri();
         $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
         $media = $mediaRepository->find($mediaId);
         $trickId = $media->getTrick()->getId();
@@ -210,7 +216,6 @@ class MediaController extends AbstractController
 
     public function convertVideoUrl(string $url): string
     {
-
         if (str_contains($url, 'watch?v=')) {
             $newUrl = str_replace('watch?v=', 'embed/', $url);
             return $newUrl;
@@ -227,8 +232,6 @@ class MediaController extends AbstractController
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         // Move the file to the directory where images are stored
-        /*$isFileCreated=false;
-        $fileCreationError=null;*/
         try {
             $file->move(
                 $this->getParameter('images_directory'),
