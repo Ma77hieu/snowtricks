@@ -39,6 +39,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setRoles(["ROLE_USER"]);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -53,6 +54,7 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
+            $this->addFlash('warning', 'Un email vous a été envoyé pour finaliser la création de votre compte, il expirera dans une heure.');
 
             return $this->redirectToRoute('index');
         }
@@ -64,18 +66,18 @@ class RegistrationController extends AbstractController
 
     public function verifyUserEmail(Request $request): Response
     {
+
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
+            $this->addFlash('danger', $exception->getReason());
 
             return $this->redirectToRoute('User.register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre adresse mail a été vérifiée.');
 
         return $this->redirectToRoute('index');
