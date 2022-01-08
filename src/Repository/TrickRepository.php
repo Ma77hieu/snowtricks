@@ -6,6 +6,8 @@ use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/*use config\Constants\Constant;*/
+
 /**
  * @method Trick|null find($id, $lockMode = null, $lockVersion = null)
  * @method Trick|null findOneBy(array $criteria, array $orderBy = null)
@@ -19,32 +21,27 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    // /**
-    //  * @return Trick[] Returns an array of Trick objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-
     public function findOneByTrickId($value): ?Trick
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.id = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
+    public function getTricksFromPage($pageNumber = 2)
+    {
+        $tricksByPage = 15;
+        /*$myConstant=new Constant();
+        $tricksByPage=$myConstant::NBRE_TRICKS_BY_PAGE;*/
+        $offset = $pageNumber * $tricksByPage;
+        $firstResult = $offset - $tricksByPage;
+        $lastResult = $offset;
+        return $this->createQueryBuilder('t')
+            ->setFirstResult($firstResult)
+            ->setMaxResults($lastResult)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -2,6 +2,10 @@ index:
     path: /
     controller: App\Controller\HomepageController::index
 
+index.moreTricks:
+    path: /homepage/{page}
+    controller: App\Controller\HomepageController::index
+
 Trick.show:
     path: /trick/{trickId}
     controller: App\Controller\TrickController::show
