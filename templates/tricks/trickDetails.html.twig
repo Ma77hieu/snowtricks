@@ -24,7 +24,11 @@
     <div class="container my-4 py-4 d-flex justify-content-center">
         {% if app.user %}
             {{ form_start(commentForm) }}
-            {{ form_row(commentForm.commentText) }}
+            <div class="form-group mb-4">
+                <label for="comment_form_commentText">Commentaire:</label>
+                    {{ form_widget(commentForm.commentText,{'attr': {'class': 'form-control','cols':'300'}}) }}
+            </div>
+            {{ form_rest(commentForm) }}
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Ajouter commentaire</button>
             </div>
