@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Media;
 use App\Entity\Trick;
 use App\Services\MediaService;
 use Symfony\Component\HttpFoundation\Response;
