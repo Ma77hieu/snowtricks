@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Media;
 use App\Entity\Trick;
+use App\Services\MediaService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -15,12 +16,12 @@ class HomepageController extends AbstractController
      * @param int $page used for pagination, each page represents a batch of tricks' cards
      * @return Response
      */
-    public function index(int $page = 1): Response
+    public function index(MediaService $mediaService,int $page = 1 ): Response
     {
         $trickRepository = $this->getDoctrine()->getRepository(Trick::class);
         $tricks = $trickRepository->getTricksFromPage($page);
-        $mainMedias = $this->getAllMainMedias();
-        $mainMediasId = $this->getMediasIds($mainMedias);
+        $mainMedias = $mediaService->getAllMainMedias();
+        $mainMediasId = $mediaService->getMediasIds($mainMedias);
         if ($page == 1) {
             return $this->render('tricks/tricksList.html.twig',
                 [
@@ -43,23 +44,4 @@ class HomepageController extends AbstractController
             }
         }
     }
-
-    public function getAllMainMedias(): array
-    {
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $allMainMedias = $mediaRepository->findBy(['isMain' => true]);
-        return ($allMainMedias);
-    }
-
-    public function getMediasIds($medias): array
-    {
-        $mediasIds = [];
-
-        foreach ($medias as $media) {
-            array_push($mediasIds, $media->getTrick()->getId());
-        }
-        return ($mediasIds);
-    }
-
-
 }
