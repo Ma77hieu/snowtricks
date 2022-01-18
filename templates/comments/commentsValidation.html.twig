@@ -2,9 +2,8 @@
 {% block title %}Admin: validation commentaires{% endblock %}
 {% block body %}
     <div class="container my-4 py-3" id="comments_to_validate">
-        {% if unvalidatedComments[0].username is defined %}
+        {% if unvalidatedComments[0].commentText is defined %}
             {% for comment in unvalidatedComments %}
-
                 <div class="row my-3 d-flex justify-content-center">
                     <div class="col-1 mx-auto my-auto text-center">
                         <img class="img-fluid rounded-circle my-auto"

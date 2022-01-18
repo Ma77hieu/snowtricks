@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\CommentService;
 use App\Services\MediaService;
 use App\Services\TrickServices;
 use App\Entity\Group;
@@ -10,6 +11,7 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentFormType;
 use App\Form\TrickFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,11 +25,24 @@ class TrickController extends AbstractController
     private TrickServices $trickServices;
 
     /**
+     * @var CommentService
+     */
+    private CommentService $commentService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private EntityManagerInterface $em;
+
+    /**
+     * Instanciation of trick controller
      * @param TrickServices $trickServices
      */
-    public function __construct(TrickServices $trickServices)
+    public function __construct(TrickServices $trickServices,EntityManagerInterface $em)
     {
         $this->trickServices = $trickServices;
+        $this->em=$em;
+        $this->commentService=new CommentService($em);
     }
 
     /**
@@ -53,28 +68,19 @@ class TrickController extends AbstractController
      */
     public function show(MediaService $mediaService,int $trickId, Request $request): Response
     {
+        $user = $this->getUser();
         $comment = new Comment();
-        $entityManager = $this->getDoctrine()->getManager();
-        $trick = $entityManager->find(Trick::class, $trickId);
-        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
-       /* $trickService = new TrickServices();*/
-        /*$serviceReturn=$trickService->showTrick($entityManager,$trick,$group,$form,$trickId,$comment);
-        return $this->controllerReturn($serviceReturn);*/
         if ($form->isSubmitted()) {
-
             if ($form->isValid()) {
-                $user = $this->getUser();
-
-                $comment->setCreationDate(new \DateTime());
-                $comment->setTrick($trick);
-                $comment->setAuthor($user);
-                $comment->setIsValidated(false);
-                $entityManager->persist($comment);
-                $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');
-
+                $commentText=$form->get('commentText')->getData();
+                $newCommentId=$this->commentService->saveNewComment($trickId,$user,$commentText);
+                if (gettype($newCommentId) == 'integer') {
+                    $this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');
+                } else {
+                    $this->addFlash('danger', 'Problème lors de la soumission de votre commentaire, veuillez réessayer');
+                }
             } else {
                 $errors = $form->getErrors();
                 $this->addFlash('danger', "$errors");
@@ -95,6 +101,9 @@ class TrickController extends AbstractController
         $mainMediaId = $mainMedia['mediaId'];
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
         $comments = $commentRepository->findByTrickId($trickId);
+        $entityManager = $this->getDoctrine()->getManager();
+        $trick = $entityManager->find(Trick::class, $trickId);
+        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
         $tags = [
             'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
             'groupe' => $group->getName(),
@@ -173,7 +182,6 @@ class TrickController extends AbstractController
         else {
             $this->addFlash('danger', 'Problème dans la suppression du trick');
         }
-
         return $this->redirectToRoute('index');
     }
 

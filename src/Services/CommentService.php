@@ -2,25 +2,15 @@
 
 namespace App\Services;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Security;
-use App\Entity\Group;
-use App\Entity\Media;
-use App\Entity\User;
 use App\Entity\Comment;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Group;
 use App\Entity\Trick;
-use App\Form\CommentFormType;
-use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Repository\MediaRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 
-class CommentsServices
+class CommentService
 {
     /**
      * @var EntityManagerInterface
@@ -34,15 +24,35 @@ class CommentsServices
     {
         $this->em = $em;
     }
-    public function validateComments($commentRepository,$commentId):array
+
+    /**
+     * Save a new comment in the database
+     * @param int $trickId the ID of the trick for which the comment needs to be created
+     * @param Request $request
+     */
+    public function saveNewComment(int $trickId,  User $user, $commentText)
+    {
+        $comment = new Comment();
+        $trick = $this->em->find(Trick::class, $trickId);
+        $comment->setCommentText($commentText);
+        $comment->setCreationDate(new \DateTime());
+        $comment->setTrick($trick);
+        $comment->setAuthor($user);
+        $comment->setIsValidated(false);
+        $this->em->persist($comment);
+        $this->em->flush();
+        return $comment->getId();
+    }
+
+    public function validateComments($commentRepository, $commentId): array
     {
         /*$comment=new Comment();*/
-        $em=$this->em->getDoctrine()->getManager();
-        $commentToValidate=$commentRepository->find($commentId);
+        $em = $this->em->getDoctrine()->getManager();
+        $commentToValidate = $commentRepository->find($commentId);
         $commentToValidate->setIsValidated(true);
         $em->persist($commentToValidate);
         $em->flush();
-        $relatedTrick=$commentToValidate->getTrick()->getName();
+        $relatedTrick = $commentToValidate->getTrick()->getName();
         $unvalidatedComments = $commentRepository->findByValidationStatus('false');
         /*if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -72,7 +82,7 @@ class CommentsServices
             'path' => 'comments/commentsValidation.html.twig',
             'flashType' => 'success',
             'flashMessage' => "le commentaire Id $commentId a été validé pour le trick $relatedTrick",
-            'data' => ['unvalidatedComments'=>$unvalidatedComments]];
+            'data' => ['unvalidatedComments' => $unvalidatedComments]];
         return $serviceAnswer;
     }
 
