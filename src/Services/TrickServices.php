@@ -2,23 +2,17 @@
 
 namespace App\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
-use App\Entity\Media;
-use App\Entity\User;
-use App\Entity\Comment;
 use App\Entity\Trick;
-use App\Form\CommentFormType;
-use App\Form\TrickFormType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Repository\MediaRepository;
-use Doctrine\Persistence\ManagerRegistry;
-
 
 class TrickServices extends AbstractController
 {
+    public function __construct(EntityManagerInterface $em) {
+        $this->em = $em;
+    }
+
     public function createTrick($entityManager,$trick,$form):array
     {
         /*$trick = new Trick();
@@ -55,6 +49,23 @@ class TrickServices extends AbstractController
             'flashMessage' => null,
             'data' => ['trickForm' => $form->createView()]];
         return $serviceAnswer;
+    }
+
+    /**
+     * Deletion of a trick with the Id passed in parameter, return true if successfull, false if not
+     * @param int $trickId
+     * @return bool
+     */
+    public function deleteTrickFromId(int $trickId):bool
+    {
+        $trick = $this->em->find(Trick::class, $trickId);
+        if ($trick != null) {
+                $this->em->remove($trick);
+                $this->em->flush();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

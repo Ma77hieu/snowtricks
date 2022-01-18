@@ -2,19 +2,16 @@
 
 namespace App\Controller;
 
-use App\Repository\MediaRepository;
+use App\Services\MediaService;
 use App\Services\TrickServices;
-use Symfony\Component\Security\Core\Security;
 use App\Entity\Group;
 use App\Entity\Media;
-use App\Entity\User;
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -54,7 +51,7 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function show(int $trickId, Request $request): Response
+    public function show(MediaService $mediaService,int $trickId, Request $request): Response
     {
         $comment = new Comment();
         $entityManager = $this->getDoctrine()->getManager();
@@ -62,7 +59,7 @@ class TrickController extends AbstractController
         $group = $entityManager->find(Group::class, $trick->getTrickGroup());
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
-        $trickService = new TrickServices();
+       /* $trickService = new TrickServices();*/
         /*$serviceReturn=$trickService->showTrick($entityManager,$trick,$group,$form,$trickId,$comment);
         return $this->controllerReturn($serviceReturn);*/
         if ($form->isSubmitted()) {
@@ -93,7 +90,7 @@ class TrickController extends AbstractController
                 $mainMediaId=$media->getId();
             }
         }*/
-        $mainMedia = $this->getMediaUrlAndId($medias);
+        $mainMedia = $mediaService->getMediaUrlAndId($medias);
         $mainMediaUrl = $mainMedia['mediaUrl'];
         $mainMediaId = $mainMedia['mediaId'];
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
@@ -122,7 +119,7 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(int $trickId, Request $request): Response
+    public function edit(TrickServices $trickService,MediaService $mediaService, int $trickId, Request $request): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $trick = $entityManager->find(Trick::class, $trickId);
@@ -146,7 +143,7 @@ class TrickController extends AbstractController
         }
         $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
         $medias = $mediaRepository->findBy(['trick' => $trickId]);
-        $mainMedia = $this->getMediaUrlAndId($medias);
+        $mainMedia = $mediaService->getMediaUrlAndId($medias);
         $mainMediaUrl = $mainMedia['mediaUrl'];
         $mainMediaId = $mainMedia['mediaId'];
         $groupRepository = $this->getDoctrine()->getRepository(Group::class);
@@ -163,17 +160,20 @@ class TrickController extends AbstractController
     }
 
     /**
+     * deletes a trick
      * @param int $trickId
      * @return Response
      */
-    public function delete(int $trickId):Response
+    public function delete(TrickServices $trickService,int $trickId):Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $trick = $entityManager->find(Trick::class, $trickId);
-        $entityManager->remove($trick);
-        $entityManager->flush();
+        $isDeletionOk=$trickService->deleteTrickFromId($trickId);
+        if ($isDeletionOk==true){
+            $this->addFlash('success', 'Vous avez supprimé un trick');
+        }
+        else {
+            $this->addFlash('danger', 'Problème dans la suppression du trick');
+        }
 
-        $this->addFlash('success', 'Vous avez supprimé un trick');
         return $this->redirectToRoute('index');
     }
 
@@ -200,23 +200,5 @@ class TrickController extends AbstractController
             $this->addFlash("danger", "une erreur interne est survenue, vous avez été redirigé vers la page d'accueil");
             return $this->redirectToRoute('index');
         }
-    }
-
-    /**
-     * @param array $mediaRepository
-     * @return array
-     */
-    public function getMediaUrlAndId(Array $mediaRepository): array
-    {
-        $MediaUrl = null;
-        $MediaId = null;
-        foreach ($mediaRepository as $media) {
-            if ($media->getIsMain()) {
-                $MediaUrl = $media->getUrl();
-                $MediaId = $media->getId();
-            }
-        }
-        return (['mediaUrl' => $MediaUrl,
-            'mediaId' => $MediaId]);
     }
 }

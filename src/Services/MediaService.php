@@ -35,4 +35,22 @@ class MediaService
         }
         return ($mediasIds);
     }
+
+    /**
+     * @param array $mediaRepository
+     * @return array
+     */
+    public function getMediaUrlAndId(Array $mediaRepository): array
+    {
+        $MediaUrl = null;
+        $MediaId = null;
+        foreach ($mediaRepository as $media) {
+            if ($media->getIsMain()) {
+                $MediaUrl = $media->getUrl();
+                $MediaId = $media->getId();
+            }
+        }
+        return (['mediaUrl' => $MediaUrl,
+            'mediaId' => $MediaId]);
+    }
 }
