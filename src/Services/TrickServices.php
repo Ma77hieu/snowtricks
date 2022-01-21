@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Group;
@@ -13,12 +14,15 @@ class TrickServices extends AbstractController
         $this->em = $em;
     }
 
-    public function createTrick($entityManager,$trick,$form):array
+    public function createTrick($entityManager,$request):array
     {
         /*$trick = new Trick();
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
         $entityManager = $this->getDoctrine()->getManager();*/
+        $trick = new Trick();
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trickGroup = $entityManager->find(Group::class, $form["trickGroup"]->getData());

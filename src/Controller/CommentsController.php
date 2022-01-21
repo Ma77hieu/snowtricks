@@ -5,15 +5,50 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentFormType;
+use App\Services\CommentService;
 use App\Services\CommentsServices;
+use App\Services\MediaService;
+use App\Services\TrickServices;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CommentsController extends AbstractController
 {
+    /**
+     * @var TrickServices
+     */
+    private TrickServices $trickServices;
+
+    /**
+     * @var CommentService
+     */
+    private CommentService $commentService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private EntityManagerInterface $em;
+
+    /**
+     * @var MediaService
+     */
+    private MediaService $mediaService;
 
 
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em=$em;
+        $this->commentService=new CommentService($em);
+        $this->mediaService=new MediaService($em);
+    }
+
+    /**
+     * Display the unvalidated comments in the comments validation page
+     * @param Request $request
+     * @return Response
+     */
     public function index(Request $request): Response
     {
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
@@ -24,6 +59,24 @@ class CommentsController extends AbstractController
             'flashMessage' => null,
             'data' => ['unvalidatedComments' => $comments]];
         return $this->controllerReturn($returnDatas);
+    }
+
+    /**Function called when a trick detail page is displayed
+     * calls the commentService to manage the form handling
+     * @param Request $request
+     * @param $user
+     * @param $form
+     * @param int $trickId
+     * @return array|false[]
+     */
+    public function manageCommentForm(Request $request,$user,$form,int $trickId)
+    {
+        return $this->commentService->handleCommentForm($request,$user,$form,$trickId);
+    }
+
+    public function createComment()
+    {
+        
     }
 
     public function validate(int $commentId): Response

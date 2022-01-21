@@ -19,11 +19,12 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-     /**
-      * @return Media[] Returns an array of Media objects
-      */
+    /**
+     * @param int $value
+     * @return array
+     */
 
-    public function findByTrickId($value): array
+    public function findByTrickId(int $value): array
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.trick = :val')

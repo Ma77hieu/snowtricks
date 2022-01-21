@@ -19,11 +19,12 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-     /**
-      * @return Comment[] Returns an array of Comment objects
-      */
+    /**
+     * @param int $value
+     * @return int|mixed|string
+     */
 
-    public function findByTrickId($value)
+    public function findByTrickId(int $value)
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.trick = :val')
@@ -33,6 +34,19 @@ class CommentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findOkComsTrickId(int $trickId)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.trick = :val')
+            ->andWhere('c.isValidated=true')
+            ->setParameter('val', $trickId)
+            ->orderBy('c.id', 'ASC')
+            /*->setMaxResults(10)*/
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 

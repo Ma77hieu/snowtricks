@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Group;
 use App\Entity\Trick;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,6 +42,43 @@ class CommentService
         $this->em->flush();
         return $comment->getId();
     }
+
+    /**
+     * Handles a new comment form submission (issued from the trick details page)
+     * @param Request $request
+     * @param $user
+     * @param $form
+     * @param int $trickId
+     * @return array|false[]
+     */
+    public function handleCommentForm(Request $request, $user,$form,int $trickId)
+    {
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $commentText = $form->get('commentText')->getData();
+                $newCommentId = $this->saveNewComment($trickId, $user, $commentText);
+                if (gettype($newCommentId) == 'integer') {
+                    $flashType = 'success';
+                    $flashMessage = 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.';
+                    /*$this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');*/
+                } else {
+                    $flashType = 'danger';
+                    $flashMessage = 'Problème lors de la soumission de votre commentaire, veuillez réessayer';
+                    /*$this->addFlash('danger', 'Problème lors de la soumission de votre commentaire, veuillez réessayer');*/
+                }
+            } else {
+                $errors = $form->getErrors();
+                $flashType = 'danger';
+                $flashMessage = "$errors";
+                /*$this->addFlash('danger', "$errors");*/
+            }
+            return ['needFlash'=>true,'flashType' => $flashType, 'flashMessage' => $flashMessage];
+        } else {
+            return ['needFlash'=>false];
+        }
+    }
+
 
     public function validateComments($commentRepository, $commentId): array
     {
@@ -84,6 +120,18 @@ class CommentService
             'flashMessage' => "le commentaire Id $commentId a été validé pour le trick $relatedTrick",
             'data' => ['unvalidatedComments' => $unvalidatedComments]];
         return $serviceAnswer;
+    }
+
+    /*public function findByTrickId(int $trickId){
+        $commentRepository = new CommentRepository();
+        $comments = $commentRepository->findByTrickId($trickId);
+        return $comments;
+    }*/
+
+    public function validatedComsForTrickId(int $trickId){
+        $commentRepository = $this->em->getRepository(Comment::class);
+        $comments = $commentRepository->findOkComsTrickId($trickId);
+        return $comments;
     }
 
     /*public function showTrick($entityManager, $trick, $group, $form, $trickId, $comment): array

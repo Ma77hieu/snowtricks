@@ -35,6 +35,16 @@ class TrickController extends AbstractController
     private EntityManagerInterface $em;
 
     /**
+     * @var MediaService
+     */
+    private MediaService $mediaService;
+
+    /**
+     * @var \App\Controller\CommentsController
+     */
+    private CommentsController $commentController;
+
+    /**
      * Instanciation of trick controller
      * @param TrickServices $trickServices
      */
@@ -43,21 +53,18 @@ class TrickController extends AbstractController
         $this->trickServices = $trickServices;
         $this->em=$em;
         $this->commentService=new CommentService($em);
+        $this->mediaService=new MediaService($em);
+        $this->commentController=new CommentsController($em);
     }
 
     /**
+     * Creates a new trick
      * @param Request $request
      * @return Response
      */
     public function create(Request $request): Response
     {
-        $trick = new Trick();
-        $form = $this->createForm(TrickFormType::class, $trick);
-        $form->handleRequest($request);
-        $entityManager = $this->getDoctrine()->getManager();
-        $serviceReturn = $this->trickServices->createTrick($entityManager, $trick, $form);
-        /*$trickService= new TrickServices();
-        $serviceReturn=$trickService->createTrick($request);*/
+        $serviceReturn = $this->trickServices->createTrick($this->em, $request);
         return $this->controllerReturn($serviceReturn);
     }
 
@@ -66,41 +73,21 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function show(MediaService $mediaService,int $trickId, Request $request): Response
+    public function show(int $trickId, Request $request): Response
     {
         $user = $this->getUser();
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $commentText=$form->get('commentText')->getData();
-                $newCommentId=$this->commentService->saveNewComment($trickId,$user,$commentText);
-                if (gettype($newCommentId) == 'integer') {
-                    $this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');
-                } else {
-                    $this->addFlash('danger', 'Problème lors de la soumission de votre commentaire, veuillez réessayer');
-                }
-            } else {
-                $errors = $form->getErrors();
-                $this->addFlash('danger', "$errors");
-            }
+        $commentManagement=$this->commentController->manageCommentForm($request,$user, $form, $trickId);
+        if ($commentManagement['needFlash']){
+            $this->addFlash($commentManagement['flashType'],$commentManagement['flashMessage']);
         }
         $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
         $medias = $mediaRepository->findByTrickId($trickId);
-        /*$mainMediaUrl=null;
-        $mainMediaId=null;
-        foreach ($medias as $media){
-            if($media->getIsMain()){
-                $mainMediaUrl=$media->getUrl();
-                $mainMediaId=$media->getId();
-            }
-        }*/
-        $mainMedia = $mediaService->getMediaUrlAndId($medias);
+        $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
         $mainMediaUrl = $mainMedia['mediaUrl'];
         $mainMediaId = $mainMedia['mediaId'];
-        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
-        $comments = $commentRepository->findByTrickId($trickId);
+        $comments=$this->commentService->validatedComsForTrickId($trickId);
         $entityManager = $this->getDoctrine()->getManager();
         $trick = $entityManager->find(Trick::class, $trickId);
         $group = $entityManager->find(Group::class, $trick->getTrickGroup());
@@ -136,8 +123,6 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            /*            echo ("form valide?");
-                        var_dump($form->isValid());*/
             if ($form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $trick->setModificationDate(new \DateTime());
