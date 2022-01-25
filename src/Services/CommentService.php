@@ -51,7 +51,7 @@ class CommentService
      * @param int $trickId
      * @return array|false[]
      */
-    public function handleCommentForm(Request $request, $user,$form,int $trickId)
+    public function handleNewCommentForm(Request $request, $user,$form,int $trickId)
     {
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -79,41 +79,66 @@ class CommentService
         }
     }
 
-
-    public function validateComments($commentRepository, $commentId): array
+    /**
+     * handle the display and submission of the modification comment form
+     * returns all the information required by the controllerReturn function of comments controller
+     * @param Request $request
+     * @param $form
+     * @param int $commentToUpdate
+     * @param int $commentId
+     * @return mixed
+     */
+    public function handleModificationForm(Request $request,$form, Comment $commentToUpdate,int $commentId)
     {
-        /*$comment=new Comment();*/
-        $em = $this->em->getDoctrine()->getManager();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $updatedText = $form->get('commentText')->getData();
+                $commentToUpdate->setCommentText($updatedText);
+                $commentToUpdate->setModificationDate(new \DateTime());
+                $this->em->persist($commentToUpdate);
+                $this->em->flush();
+                $relatedTrickId = $commentToUpdate->getTrick()->getId();
+                $serviceReturn = ['returnType' => 'redirect',
+                    'path' => 'Trick.show',
+                    'flashType' => 'success',
+                    'flashMessage' => "le commentaire Id $commentId a été modifié pour le trick $relatedTrickId",
+                    'data' => ['trickId'=>$relatedTrickId]];
+            }
+            else{
+                $serviceReturn = ['returnType' => 'redirect',
+                    'path' => 'Comment.update',
+                    'flashType' => 'danger',
+                    'flashMessage' => "Un problème est survenu avec la modification du commentaire, merci de reessayer",
+                    'data' => ['commentId'=>$commentId]];
+            }
+            return $serviceReturn;
+        }
+        $serviceReturn = ['returnType' => 'render',
+            'path' => 'comments/commentEdition.html.twig',
+            'flashType' => 'danger',
+            'flashMessage' => null,
+            'data' => ['commentId'=>$commentId,
+                'commentEditionForm'=>$form->createView()]];
+        return $serviceReturn;
+    }
+
+
+    /**
+     * Set the isValidated property to true for a specific comments
+     * returns all the information required by the controllerReturn function of comments controller
+     * @param $commentId
+     * @return array
+     */
+    public function validateComments($commentId): array
+    {
+        $commentRepository = $this->em->getRepository(Comment::class);
         $commentToValidate = $commentRepository->find($commentId);
         $commentToValidate->setIsValidated(true);
-        $em->persist($commentToValidate);
-        $em->flush();
+        $this->em->persist($commentToValidate);
+        $this->em->flush();
         $relatedTrick = $commentToValidate->getTrick()->getName();
         $unvalidatedComments = $commentRepository->findByValidationStatus('false');
-        /*if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $trickGroup = $entityManager->find(Comment::class, $form["trickGroup"]->getData());
-                //define the group to which the trick is linked
-                $trick->setTrickGroup($trickGroup);
-                //set the creation date to the current date type
-                $trick->setCreationDate(new \DateTime());
-                //save the trick into database
-                $entityManager->persist($trick);
-                $entityManager->flush();
-                $serviceAnswer = ['returnType' => 'redirect',
-                    'path' => 'index',
-                    'flashType' => 'success',
-                    'flashMessage' => 'Le trick a été créé',
-                    'data' => []];
-            } else {
-                $serviceAnswer = ['returnType' => 'render',
-                    'path' => 'tricks/trickCreation.html.twig',
-                    'flashType' => 'danger',
-                    'flashMessage' => 'Une erreur est survenue, voir le formulaire pour plus de détails',
-                    'data' => ['trickForm' => $form->createView()]];
-            }
-            return $serviceAnswer;
-        }*/
         $serviceAnswer = ['returnType' => 'render',
             'path' => 'comments/commentsValidation.html.twig',
             'flashType' => 'success',
@@ -122,63 +147,36 @@ class CommentService
         return $serviceAnswer;
     }
 
-    /*public function findByTrickId(int $trickId){
-        $commentRepository = new CommentRepository();
-        $comments = $commentRepository->findByTrickId($trickId);
-        return $comments;
-    }*/
-
+    /**
+     * returns the list of validated comments for a specific trickId
+     * @param int $trickId
+     * @return mixed
+     */
     public function validatedComsForTrickId(int $trickId){
         $commentRepository = $this->em->getRepository(Comment::class);
         $comments = $commentRepository->findOkComsTrickId($trickId);
         return $comments;
     }
 
-    /*public function showTrick($entityManager, $trick, $group, $form, $trickId, $comment): array
+    /**
+     * delete from the database the comment corresponding to the parameter commentId
+     * returns all the information required by the controllerReturn function of comments controller
+     * @param int $commentId
+     * @return array
+     */
+    public function deleteComment(int $commentId):array
     {
-
-        if ($form->isSubmitted()) {
-
-            if ($form->isValid()) {
-                $user = $this->getUser();
-
-                $comment->setCreationDate(new \DateTime());
-                $comment->setTrick($trick);
-                $comment->setAuthor($user);
-                $entityManager->persist($comment);
-                $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été ajouté');
-            } else {
-                $errors = $form->getErrors();
-                $this->addFlash('danger', "$errors");
-            }
-        }
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $mediaRepository->findByTrickId($trickId);
-        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
-        $comments = $commentRepository->findByTrickId($trickId);
-        $tags = [
-            'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
-            'groupe' => $group->getName(),
-        ];
-        if ($trick->getModificationDate()) {
-            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
-            $tags['date de modification'] = $trickModifDate;
-        }
-
-        $returnData= [
-            'commentForm' => $form->createView(),
-            'medias' => $medias,
-            'comments' => $comments,
-            'trick' => $trick,
-            'tags' => $tags,];
-
-        $serviceAnswer = ['returnType' => 'render',
-            'path' => 'tricks/trickCreation.html.twig',
+        $commentRepository = $this->em->getRepository(Comment::class);
+        $commentToDelete = $commentRepository->find($commentId);
+        $relatedTrickName = $commentToDelete->getTrick()->getName();
+        $trickId=$commentToDelete->getTrick()->getId();
+        $this->em->remove($commentToDelete);
+        $this->em->flush();
+        $serviceReturn = ['returnType' => 'redirect',
+            'path' => 'Trick.show',
             'flashType' => 'success',
-            'flashMessage' => null,
-            'data' => $returnData];
-
-        return $serviceAnswer;
-    }*/
+            'flashMessage' => "le commentaire Id $commentId en lien avec le trick $relatedTrickName a été supprimé",
+            'data' => ['trickId' => $trickId]];
+        return $serviceReturn;
+    }
 }
