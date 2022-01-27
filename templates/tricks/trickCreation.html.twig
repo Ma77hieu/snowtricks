@@ -5,9 +5,19 @@
         <div class="row d-flex justify-content-center">
                 <div class="col-10">
                     {{ form_start(trickForm) }}
-                    {{ form_row(trickForm.name) }}
-                    {{ form_row(trickForm.description) }}
-                    {{ form_row(trickForm.trickGroup) }}
+                    <div class="form-group mb-4">
+                        <label for="trick_form_name" class="mb-3">Nom du trick:</label>
+                        {{ form_widget(trickForm.name,{'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="trick_form_description" class="mb-3">Description:</label>
+                        {{ form_widget(trickForm.description,{'attr': {'class': 'form-control','cols':'300'}}) }}
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="trick_form_group" class="mb-3">Groupe du trick:</label>
+                        {{ form_widget(trickForm.trickGroup,{'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    {{ form_rest(trickForm) }}
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Creer trick</button>
                     </div>
