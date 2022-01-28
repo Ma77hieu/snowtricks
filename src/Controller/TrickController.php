@@ -40,7 +40,7 @@ class TrickController extends AbstractController
     private MediaService $mediaService;
 
     /**
-     * @var \App\Controller\CommentsController
+     * @var CommentsController
      */
     private CommentsController $commentController;
 
@@ -115,42 +115,13 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(TrickServices $trickService,MediaService $mediaService, int $trickId, Request $request): Response
+    public function edit(MediaService $mediaService, int $trickId, Request $request): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $trick = $entityManager->find(Trick::class, $trickId);
+        $trick = $this->em->find(Trick::class, $trickId);
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $trick->setModificationDate(new \DateTime());
-                $entityManager->merge($trick);
-                $entityManager->flush();
-                $this->addFlash('success', 'Trick mis à jour.');
-                return $this->redirectToRoute('index');
-            } else {
-                $errors = $form->getErrors();
-                $this->addFlash('danger', "$errors");
-            }
-        }
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $mediaRepository->findBy(['trick' => $trickId]);
-        $mainMedia = $mediaService->getMediaUrlAndId($medias);
-        $mainMediaUrl = $mainMedia['mediaUrl'];
-        $mainMediaId = $mainMedia['mediaId'];
-        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
-        $groups = $groupRepository->findAll();
-
-        /*var_dump($groups);die;*/
-        return $this->render('tricks/trickEdition.html.twig', [
-            'trickForm' => $form->createView(),
-            'medias' => $medias,
-            'trick' => $trick,
-            'groups' => $groups,
-            'mainMediaUrl' => $mainMediaUrl,
-            'mainMediaId' => $mainMediaId]);
+        $serviceReturn=$this->trickServices->handleTrickEditionForm($trickId, $form,$trick);
+        return $this->controllerReturn($serviceReturn);
     }
 
     /**
@@ -171,6 +142,8 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Generic function used by the various funcitons of the controller to redirect or return the response
+     * Also returns the datas to be sent to the templates and the flash message if one is needed
      * @param $input
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */

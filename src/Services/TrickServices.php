@@ -2,24 +2,37 @@
 
 namespace App\Services;
 
+use App\Controller\CommentsController;
+use App\Entity\Media;
 use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Group;
 use App\Entity\Trick;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TrickServices extends AbstractController
 {
+    /**
+     * Instanciation of trick service
+     * @param EntityManagerInterface $em
+     */
     public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
+        $this->mediaService=new MediaService($em);
     }
+
+    /*public function __construct(TrickServices $trickServices,EntityManagerInterface $em)
+    {
+        $this->trickServices = $trickServices;
+        $this->em=$em;
+        $this->commentService=new CommentService($em);
+        $this->mediaService=new MediaService($em);
+        $this->commentController=new CommentsController($em);
+    }*/
 
     public function createTrick($entityManager,$request):array
     {
-        /*$trick = new Trick();
-        $form = $this->createForm(TrickFormType::class, $trick);
-        $form->handleRequest($request);
-        $entityManager = $this->getDoctrine()->getManager();*/
         $trick = new Trick();
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
@@ -72,52 +85,64 @@ class TrickServices extends AbstractController
         }
     }
 
-
-    /*public function showTrick($entityManager, $trick, $group, $form, $trickId, $comment): array
+    /**
+     * Displays the trick edition page in case of get, manage trick edition in case of post
+     * @param int $trickId
+     * @param $form
+     * @param Trick $trick
+     * @return array|RedirectResponse
+     */
+    public function handleTrickEditionForm(int $trickId, $form,Trick $trick)
     {
-
         if ($form->isSubmitted()) {
-
             if ($form->isValid()) {
-                $user = $this->getUser();
-
-                $comment->setCreationDate(new \DateTime());
-                $comment->setTrick($trick);
-                $comment->setAuthor($user);
-                $entityManager->persist($comment);
-                $entityManager->flush();
-                $this->addFlash('success', 'Votre commentaire a été ajouté');
+                $trick->setModificationDate(new \DateTime());
+                $this->em->merge($trick);
+                $this->em->flush();
+                $flashType='success';
+                $flashMsg='Trick mis à jour.';
+                $path='Trick.edit';
+                $data=['trickId'=>$trickId];
             } else {
                 $errors = $form->getErrors();
                 $this->addFlash('danger', "$errors");
+                $flashType='danger';
+                $flashMsg="$errors";
+                $path='index';
+                $data=[];
             }
+            return ['returnType' => 'redirect',
+                'path' => $path,
+                'flashType' => $flashType,
+                'flashMessage' => $flashMsg,
+                'data' => $data];
         }
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $mediaRepository->findByTrickId($trickId);
-        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
-        $comments = $commentRepository->findByTrickId($trickId);
-        $tags = [
-            'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
-            'groupe' => $group->getName(),
-        ];
-        if ($trick->getModificationDate()) {
-            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
-            $tags['date de modification'] = $trickModifDate;
-        }
+        $mediaRepository = $this->em->getRepository(Media::class);
+        $medias = $mediaRepository->findBy(['trick' => $trickId]);
+        $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
+        $mainMediaUrl = $mainMedia['mediaUrl'];
+        $mainMediaId = $mainMedia['mediaId'];
+        $groupRepository = $this->em->getRepository(Group::class);
+        $groups = $groupRepository->findAll();
 
-        $returnData= [
-            'commentForm' => $form->createView(),
-            'medias' => $medias,
-            'comments' => $comments,
-            'trick' => $trick,
-            'tags' => $tags,];
-
-        $serviceAnswer = ['returnType' => 'render',
-            'path' => 'tricks/trickCreation.html.twig',
+        $serviceReturn = ['returnType' => 'render',
+            'path' => 'tricks/trickEdition.html.twig',
             'flashType' => 'success',
-            'flashMessage' => null,
-            'data' => $returnData];
-
-        return $serviceAnswer;
-    }*/
+            'flashMessage' => "",
+            'data' => [
+                'trickForm' => $form->createView(),
+                'medias' => $medias,
+                'trick' => $trick,
+                'groups' => $groups,
+                'mainMediaUrl' => $mainMediaUrl,
+                'mainMediaId' => $mainMediaId]];
+        return $serviceReturn;
+        /*return $this->render('tricks/trickEdition.html.twig', [
+            'trickForm' => $form->createView(),
+            'medias' => $medias,
+            'trick' => $trick,
+            'groups' => $groups,
+            'mainMediaUrl' => $mainMediaUrl,
+            'mainMediaId' => $mainMediaId]);*/
+    }
 }
