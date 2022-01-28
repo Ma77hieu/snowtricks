@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Controller\CommentsController;
+use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Media;
 use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,27 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TrickServices extends AbstractController
 {
+
+    /**
+     * @var CommentsController
+     */
+    private CommentsController $commentController;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private EntityManagerInterface $em;
+
+    /**
+     * @var CommentService
+     */
+    private CommentService $commentService;
+
+    /**
+     * @var MediaService
+     */
+    private MediaService $mediaService;
+
     /**
      * Instanciation of trick service
      * @param EntityManagerInterface $em
@@ -20,16 +42,9 @@ class TrickServices extends AbstractController
     public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
         $this->mediaService=new MediaService($em);
-    }
-
-    /*public function __construct(TrickServices $trickServices,EntityManagerInterface $em)
-    {
-        $this->trickServices = $trickServices;
-        $this->em=$em;
-        $this->commentService=new CommentService($em);
-        $this->mediaService=new MediaService($em);
         $this->commentController=new CommentsController($em);
-    }*/
+        $this->commentService=new CommentService($em);
+    }
 
     public function createTrick($entityManager,$request):array
     {
@@ -137,12 +152,52 @@ class TrickServices extends AbstractController
                 'mainMediaUrl' => $mainMediaUrl,
                 'mainMediaId' => $mainMediaId]];
         return $serviceReturn;
-        /*return $this->render('tricks/trickEdition.html.twig', [
-            'trickForm' => $form->createView(),
+    }
+
+    /**
+     * Used by the trick details page to display all the information about a trick
+     * returns all the information required by the controllerReturn function of tricks controller
+     * @param Request $request
+     * @param $user
+     * @param $form
+     * @param $trickId
+     * @return array
+     */
+    public function showTrickDetails(Request $request, $user, $form, $trickId):array
+    {
+
+        $commentManagement=$this->commentController->manageCommentForm($request,$user, $form, $trickId);
+        if ($commentManagement['needFlash']){
+            $this->addFlash($commentManagement['flashType'],$commentManagement['flashMessage']);
+        }
+        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $medias = $mediaRepository->findByTrickId($trickId);
+        $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
+        $mainMediaUrl = $mainMedia['mediaUrl'];
+        $mainMediaId = $mainMedia['mediaId'];
+        $comments=$this->commentService->validatedComsForTrickId($trickId);
+        $entityManager = $this->getDoctrine()->getManager();
+        $trick = $entityManager->find(Trick::class, $trickId);
+        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
+        $tags = [
+            'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
+            'groupe' => $group->getName(),
+        ];
+        if ($trick->getModificationDate()) {
+            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
+            $tags['date de modification'] = $trickModifDate;
+        }
+
+        return ['returnType' => 'render',
+            'path'=>'tricks/trickDetails.html.twig',
+            'flashType' => 'success',
+            'flashMessage' => "",
+            'data'=>['commentForm' => $form->createView(),
             'medias' => $medias,
+            'comments' => $comments,
             'trick' => $trick,
-            'groups' => $groups,
+            'tags' => $tags,
             'mainMediaUrl' => $mainMediaUrl,
-            'mainMediaId' => $mainMediaId]);*/
+            'mainMediaId' => $mainMediaId]];
     }
 }

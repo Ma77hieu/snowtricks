@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Services\CommentService;
 use App\Services\MediaService;
 use App\Services\TrickServices;
-use App\Entity\Group;
-use App\Entity\Media;
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentFormType;
@@ -69,6 +67,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Manage the display of a trick details page
      * @param int $trickId
      * @param Request $request
      * @return Response
@@ -78,39 +77,12 @@ class TrickController extends AbstractController
         $user = $this->getUser();
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
-        $commentManagement=$this->commentController->manageCommentForm($request,$user, $form, $trickId);
-        if ($commentManagement['needFlash']){
-            $this->addFlash($commentManagement['flashType'],$commentManagement['flashMessage']);
-        }
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
-        $medias = $mediaRepository->findByTrickId($trickId);
-        $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
-        $mainMediaUrl = $mainMedia['mediaUrl'];
-        $mainMediaId = $mainMedia['mediaId'];
-        $comments=$this->commentService->validatedComsForTrickId($trickId);
-        $entityManager = $this->getDoctrine()->getManager();
-        $trick = $entityManager->find(Trick::class, $trickId);
-        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
-        $tags = [
-            'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
-            'groupe' => $group->getName(),
-        ];
-        if ($trick->getModificationDate()) {
-            $trickModifDate = $trick->getModificationDate()->format('Y-m-d H:i:s');
-            $tags['date de modification'] = $trickModifDate;
-        }
-
-        return $this->render('tricks/trickDetails.html.twig', [
-            'commentForm' => $form->createView(),
-            'medias' => $medias,
-            'comments' => $comments,
-            'trick' => $trick,
-            'tags' => $tags,
-            'mainMediaUrl' => $mainMediaUrl,
-            'mainMediaId' => $mainMediaId]);
+        $serviceReturn=$this->trickServices->showTrickDetails($request,$user,$form,$trickId);
+        return $this->controllerReturn($serviceReturn);
     }
 
     /**
+     * Manage the display of a trickEdition page
      * @param int $trickId
      * @param Request $request
      * @return Response
