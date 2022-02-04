@@ -46,13 +46,16 @@ class TrickController extends AbstractController
      * Instanciation of trick controller
      * @param TrickServices $trickServices
      */
-    public function __construct(TrickServices $trickServices,EntityManagerInterface $em)
+    public function __construct(TrickServices $trickServices,
+                                EntityManagerInterface $em,
+                                MediaService $mediaService,
+                                CommentsController $commentController)
     {
         $this->trickServices = $trickServices;
         $this->em=$em;
         $this->commentService=new CommentService($em);
-        $this->mediaService=new MediaService($em);
-        $this->commentController=new CommentsController($em);
+        $this->mediaService=$mediaService;
+        $this->commentController=$commentController;
     }
 
     /**

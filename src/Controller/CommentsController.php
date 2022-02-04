@@ -36,11 +36,11 @@ class CommentsController extends AbstractController
     private MediaService $mediaService;
 
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em,MediaService $mediaService)
     {
         $this->em = $em;
         $this->commentService = new CommentService($em);
-        $this->mediaService = new MediaService($em);
+        $this->mediaService = $mediaService;
     }
 
     /**
