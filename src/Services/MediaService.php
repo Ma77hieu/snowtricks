@@ -7,7 +7,6 @@ use App\Entity\MediaType;
 use App\Entity\Trick;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class MediaService
@@ -31,7 +30,7 @@ class MediaService
     {
         $this->em = $em;
         $this->slugger = $slugger;
-        $this->imagesDirectory=$imagesDirectory;
+        $this->imagesDirectory = $imagesDirectory;
     }
 
     /**
@@ -44,9 +43,9 @@ class MediaService
      * @param $form
      * @return array
      */
-    public function createMedia(int $trickId, int $mediaType, $form):array
+    public function createMedia(int $trickId, int $mediaType, $form): array
     {
-        $media=new Media();
+        $media = new Media();
         $trick = $this->em->find(Trick::class, $trickId);
         $trickName = $trick->getName();
         if ($form->isSubmitted()) {
@@ -73,18 +72,12 @@ class MediaService
                             $urlAccepted = $this->checkVideoUrl($urlConverted);
                             $media->setIsMain(false);
                             if ($urlAccepted != true) {
-                                /*$this->addFlash("danger",
-                                    "Merci de choisir une video youtube et cliquer sur \"partager\" puis \"integrer\"  
-                                    Utilisez ensuite l'url commencant par https://www.youtube.com/embed");
-                                return $this->redirectToRoute('Media.create', [
-                                    'trickId' => $trickId,
-                                    'mediaType' => $mediaType]);*/
-                                return ['returnType'=>'redirect',
-                                    'path'=>'Media.create',
-                                    'flashType'=>'danger',
-                                    'flashMessage'=>"Merci de choisir une video youtube et cliquer sur \"partager\" puis \"integrer\"  
+                                return ['returnType' => 'redirect',
+                                    'path' => 'Media.create',
+                                    'flashType' => 'danger',
+                                    'flashMessage' => "Merci de choisir une video youtube et cliquer sur \"partager\" puis \"integrer\"  
                                     Utilisez ensuite l'url commencant par https://www.youtube.com/embed",
-                                    'data'=>['trickId' => $trickId,
+                                    'data' => ['trickId' => $trickId,
                                         'mediaType' => $mediaType]];
                             }
                             $media->setUrl($urlConverted);
@@ -94,43 +87,137 @@ class MediaService
                         $media->setTrick($trick);
                         $this->em->persist($media);
                         $this->em->flush();
-                        /*$this->addFlash("success", "Le média a été enregistré");
-                        return $this->redirectToRoute('Trick.show', ['trickId' => $trickId]);*/
-                        return ['returnType'=>'redirect',
-                            'path'=>'Trick.show',
-                            'flashType'=>'success',
-                            'flashMessage'=>'Le média a été enregistré',
-                        'data'=>['trickId' => $trickId]];
+                        return ['returnType' => 'redirect',
+                            'path' => 'Trick.show',
+                            'flashType' => 'success',
+                            'flashMessage' => 'Le média a été enregistré',
+                            'data' => ['trickId' => $trickId]];
                     }
 
                 } else {
-                    /*$this->addFlash("danger", "Merci de choisir une image à uploader ou une url valide avant de valider");
-                    return $this->redirectToRoute('Media.create', [
-                        'trickId' => $trickId,
-                        'mediaType' => $mediaType]);*/
-                    return ['returnType'=>'redirect',
-                        'path'=>'Media.create',
-                        'flashType'=>'danger',
-                        'flashMessage'=>'Merci de choisir une image à uploader ou une url valide avant de valider',
-                        'data'=>['trickId' => $trickId,
+                    return ['returnType' => 'redirect',
+                        'path' => 'Media.create',
+                        'flashType' => 'danger',
+                        'flashMessage' => 'Merci de choisir une image à uploader ou une url valide avant de valider',
+                        'data' => ['trickId' => $trickId,
                             'mediaType' => $mediaType]];
                 }
 
             }
         }
-        /*return $this->render('media/mediaCreation.html.twig', [
-            'controller_name' => 'MediaController',
-            'trickName' => $trickName,
-            'mediaForm' => $form->createView(),
-            'mediaType' => $mediaType,
-        ]);*/
-        return ['returnType'=>'render',
-            'path'=>'media/mediaCreation.html.twig',
-            'flashType'=>'',
-            'flashMessage'=>'',
-            'data'=>['trickName' => $trickName,
+        return ['returnType' => 'render',
+            'path' => 'media/mediaCreation.html.twig',
+            'flashType' => '',
+            'flashMessage' => '',
+            'data' => ['trickName' => $trickName,
                 'mediaForm' => $form->createView(),
                 'mediaType' => $mediaType]];
+    }
+
+    /**
+     * Updates an existing media (image or video)
+     * @param int $mediaId the id of the media to be updated
+     * @param $form
+     * @param Media $mediaToUpdate
+     * @param bool $was_main was the media the main image before form submitting
+     * @return array
+     */
+    public function update(int $mediaId, $form,Media $mediaToUpdate,bool $was_main): array
+    {
+        $currentUrl = $mediaToUpdate->getUrl();
+        $trickId = $mediaToUpdate->getTrick()->getId();
+        $trickName = $mediaToUpdate->getTrick()->getName();
+        $type = $mediaToUpdate->getMediaType()->getId();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $url = $form->get('url')->getData();
+            $changes_done = false;
+            if ($type == 1) {
+                if ($url) {
+                    $fileCreation = $this->createNewFile($this->slugger, $url);
+                    $e = $fileCreation['fileCreationError'];
+                    $newFilename = $fileCreation['newFilename'];
+                    if (!isset($e)) {
+                        $mediaToUpdate->setUrl($newFilename);
+                        $flashType = 'success';
+                        $flashMessage = "Modification de l'image effectuée";
+                        $changes_done = true;
+                    } else {
+                        $flashType = 'danger';
+                        $flashMessage = "une erreur est survenue lors de l'enregistrement de l'image, description:" . $e;
+                    }
+                }
+                $is_main = $form->get('isMain')->getData();
+                //detect if user wants to change the is_main property
+                if ($is_main != $was_main) {
+                    //identify the main media for the related trick
+                    $mediaRepository = $this->em->getRepository(Media::class);
+                    $initialMainMedia = $mediaRepository->findMainMediaWithTrickId($trickId);
+                    if ($is_main == true) {
+                        //set initial main media is_main value to false if updated media is not the same and requested to be main
+                        if ($initialMainMedia != null and ($initialMainMedia->getId() != $mediaId)) {
+                            $initialMainMedia->setIsMain(false);
+                            $this->em->persist($initialMainMedia);
+                            $this->em->flush();
+                        }
+                        $mediaToUpdate->setIsMain(true);
+                    } else {
+                        //change is_main property of media to false if it was true
+                        if ($mediaToUpdate->getIsMain() == true) {
+                            $mediaToUpdate->setIsMain(false);
+                        }
+                    }
+                    $changes_done = true;
+                }
+            }
+            if ($type == 2) {
+                $urlConverted = $this->convertVideoUrl($url);
+                $urlAccepted = $this->checkVideoUrl($urlConverted);
+                if (($urlAccepted != true) || ($urlConverted == $currentUrl)) {
+                    if ($urlAccepted != true) {
+                        $flashType = 'danger';
+                        $flashMessage = "Format d'url incorrect. Format accepté https://www.youtube.com/watch?v=xxxxx OU https://www.youtube.com/embed/xxxx";
+                    }
+                    if ($urlConverted == $currentUrl) {
+                        $flashType = 'warning';
+                        $flashMessage = "L'url entrée est identique à celle enregistrée, pas de modification effectuée";
+                        return ['returnType' => 'redirect',
+                            'path' => 'Trick.show',
+                            'flashType' => $flashType,
+                            'flashMessage' => $flashMessage,
+                            'data' => ['trickId' => $trickId]];
+                    }
+
+                    return ['returnType' => 'redirect',
+                        'path' => 'Media.create',
+                        'flashType' => $flashType,
+                        'flashMessage' => $flashMessage,
+                        'data' => ['trickId' => $trickId,
+                            'mediaType' => $type]];
+                } else {
+                    $changes_done = true;
+                    $mediaToUpdate->setUrl($urlConverted);
+                }
+            }
+            $this->em->persist($mediaToUpdate);
+            $this->em->flush();
+            if ($changes_done) {
+                $flashType = 'success';
+                $flashMessage = "Modification enregistrée";
+            }
+            return ['returnType' => 'redirect',
+                'path' => 'Trick.show',
+                'flashType' => $flashType,
+                'flashMessage' => $flashMessage,
+                'data' => ['trickId' => $trickId]];
+        }
+        return ['returnType' => 'render',
+            'path' => 'media/mediaCreation.html.twig',
+            'flashType' => '',
+            'flashMessage' => '',
+            'data' => ['trickName' => $trickName,
+                'mediaForm' => $form->createView(),
+                'mediaType' => $type]];
     }
 
     /** Returns all media objects that are main images for tricks
@@ -159,6 +246,8 @@ class MediaService
     }
 
     /**
+     * Returns an array with all the media id and url ['mediaUrl' => xxx,'mediaId' => xxx]
+     * from the repository given as a parameter
      * @param array $mediaRepository
      * @return array
      */
@@ -222,23 +311,15 @@ class MediaService
         // Move the file to the directory where images are stored
         try {
             $file->move(
-                /*$this->getParameter('images_directory'),*/
                 $this->imagesDirectory,
                 $newFilename
             );
             $fileCreationError = null;
         } catch (FileException $e) {
             // ... handle exception if something happens during file upload
-            /*$this->addFlash("danger", "une erreur est survenue lors de l'enregistrement de l'image, description:" . $e);*/
             $newFilename = null;
             $fileCreationError = $e;
         }
         return ['newFilename' => $newFilename, 'fileCreationError' => $fileCreationError];
     }
 }
-
-/*return ['returnType'=>'',
-    'path'=>'',
-    'flashType'=>'',
-    'flashMessage'=>'',
-    'data'=>[''=>'',''=>'']];*/
