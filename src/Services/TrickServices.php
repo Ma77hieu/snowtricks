@@ -7,12 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Media;
 use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Group;
 use App\Entity\Trick;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class TrickServices extends AbstractController
+class TrickServices
 {
 
     /**
@@ -108,9 +106,9 @@ class TrickServices extends AbstractController
      * @param int $trickId
      * @param $form
      * @param Trick $trick
-     * @return array|RedirectResponse
+     * @return array
      */
-    public function handleTrickEditionForm(int $trickId, $form,Trick $trick)
+    public function handleTrickEditionForm(int $trickId, $form,Trick $trick):array
     {
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -173,15 +171,14 @@ class TrickServices extends AbstractController
         if ($commentManagement['needFlash']){
             $this->addFlash($commentManagement['flashType'],$commentManagement['flashMessage']);
         }
-        $mediaRepository = $this->getDoctrine()->getRepository(Media::class);
+        $mediaRepository = $this->em->getRepository(Media::class);
         $medias = $mediaRepository->findByTrickId($trickId);
         $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
         $mainMediaUrl = $mainMedia['mediaUrl'];
         $mainMediaId = $mainMedia['mediaId'];
         $comments=$this->commentService->validatedComsForTrickId($trickId);
-        $entityManager = $this->getDoctrine()->getManager();
-        $trick = $entityManager->find(Trick::class, $trickId);
-        $group = $entityManager->find(Group::class, $trick->getTrickGroup());
+        $trick = $this->em->find(Trick::class, $trickId);
+        $group = $this->em->find(Group::class, $trick->getTrickGroup());
         $tags = [
             'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
             'groupe' => $group->getName(),
