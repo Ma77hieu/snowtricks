@@ -65,7 +65,10 @@ class TrickController extends AbstractController
      */
     public function create(Request $request): Response
     {
-        $serviceReturn = $this->trickServices->createTrick($this->em, $request);
+        $trick = new Trick();
+        $form = $this->createForm(TrickFormType::class, $trick);
+        $form->handleRequest($request);
+        $serviceReturn = $this->trickServices->createTrick($this->em, $trick, $form);
         return $this->controllerReturn($serviceReturn);
     }
 

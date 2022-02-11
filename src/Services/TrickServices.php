@@ -47,11 +47,9 @@ class TrickServices
     }
 
 
-    public function createTrick($entityManager,$request):array
+    public function createTrick($entityManager,$trick,$form):array
     {
-        $trick = new Trick();
-        $form = $this->createForm(TrickFormType::class, $trick);
-        $form->handleRequest($request);
+
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trickGroup = $entityManager->find(Group::class, $form["trickGroup"]->getData());
