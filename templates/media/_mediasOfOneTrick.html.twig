@@ -1,31 +1,41 @@
-
-<div class="container" id="medias_section">
+<div class="container">
+    {#Button defined below is visible only on small screen (managed by styles.css)
+    and uses the javascript at the end of this file to unhide medias on click#}
+    <div class="row my-5 justify-content-center" id="displayMediasBtn">
+            <button  class="btn btn-primary px-3 col-6"> Voir les images/videos</button>
+    </div>
     <!-- Medias cards -->
-    <div class="row d-flex justify-content-center">
+    {# The id medias_section is modified by css/styles.ccs to be displayed only on large screens#}
+    <div class="row justify-content-center" id="medias_section">
         {% for media in medias %}
             {% if not media.isMain %}
-                <div class="col-11 col-md-4 d-flex">
+                <div class="col-11 col-md-4 d-flex mx-auto">
                     <div class="card shadow w-100 my-2 align-self-stretch">
                         <div class="card-body d-flex flex-column justify-content-between">
                             <div class="row d-flex justify-content-center m-auto">
                                 {% if media.mediaType.id == 2 %}
                                     <div class="embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" src="{{ media.url }}" allowfullscreen></iframe>
+                                        <iframe class="embed-responsive-item" src="{{ media.url }}"
+                                                allowfullscreen></iframe>
                                     </div>
                                 {% endif %}
                                 {% if media.mediaType.id == 1 and not media.isMain %}
                                     <div class="card-img">
-                                        <img class="img-fluid" src="{{ asset('uploads/images/')}}{{ media.url }}">
+                                        <img class="img-fluid" src="{{ asset('uploads/images/') }}{{ media.url }}">
                                     </div>
                                 {% endif %}
                             </div>
                             {% if app.user %}
                                 <div class="row text-white mt-3 d-flex align-items-center">
                                     <div class="col-6 text-center">
-                                        <a class="btn btn-secondary text-center rounded" href="{{ path('Media.update', {mediaId:media.id}) }}"><i class="far fa-edit"></i></a>
+                                        <a class="btn btn-secondary text-center rounded"
+                                           href="{{ path('Media.update', {mediaId:media.id}) }}"><i
+                                                    class="far fa-edit"></i></a>
                                     </div>
                                     <div class="col-6 text-center">
-                                        <a class="btn btn-danger text-center rounded" href="{{ path('Media.delete', {mediaId:media.id}) }}"><i class="far fa-trash-alt"></i></a>
+                                        <a class="btn btn-danger text-center rounded"
+                                           href="{{ path('Media.delete', {mediaId:media.id}) }}"><i
+                                                    class="far fa-trash-alt"></i></a>
                                     </div>
                                 </div>
                             {% endif %}
@@ -38,12 +48,14 @@
 </div>
 <div class="row mt-2 d-flex justify-content-center">
     {% if app.user %}
-    <div class="col-5 col-md-3 d-flex justify-content-center">
-        <a class="btn btn-primary text-center rounded p-2" href="{{ path('Media.create', {trickId:trick.id,mediaType:1}) }}">Ajouter une image</a>
-    </div>
-    <div class="col-5 col-md-3 d-flex justify-content-center">
-        <a class="btn btn-primary text-center rounded p-2" href="{{ path('Media.create', {trickId:trick.id,mediaType:2}) }}">Ajouter une video</a>
-    </div>
+        <div class="col-5 col-md-3 d-flex justify-content-center">
+            <a class="btn btn-primary text-center rounded p-2"
+               href="{{ path('Media.create', {trickId:trick.id,mediaType:1}) }}">Ajouter une image</a>
+        </div>
+        <div class="col-5 col-md-3 d-flex justify-content-center">
+            <a class="btn btn-primary text-center rounded p-2"
+               href="{{ path('Media.create', {trickId:trick.id,mediaType:2}) }}">Ajouter une video</a>
+        </div>
     {% endif %}
     {% if not app.user %}
         <div class="row d-flex justify-content-center">
@@ -60,3 +72,11 @@
     {% endif %}
 
 </div>
+<script>
+    let showMediasBtn=document.getElementById('displayMediasBtn')
+    let mediasDiv=document.getElementById('medias_section')
+    showMediasBtn.onclick=function(){
+        console.log('appui btn');
+        mediasDiv.style.display='block';
+    };
+</script>
