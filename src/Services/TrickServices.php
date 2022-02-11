@@ -166,8 +166,11 @@ class TrickServices
     {
 
         $commentManagement=$this->commentController->manageCommentForm($request,$user, $form, $trickId);
+        $flashType='';
+        $flashMessage='';
         if ($commentManagement['needFlash']){
-            $this->addFlash($commentManagement['flashType'],$commentManagement['flashMessage']);
+            $flashType=$commentManagement['flashType'];
+            $flashMessage=$commentManagement['flashMessage'];
         }
         $mediaRepository = $this->em->getRepository(Media::class);
         $medias = $mediaRepository->findByTrickId($trickId);
@@ -188,8 +191,8 @@ class TrickServices
 
         return ['returnType' => 'render',
             'path'=>'tricks/trickDetails.html.twig',
-            'flashType' => 'success',
-            'flashMessage' => "",
+            'flashType' => $flashType,
+            'flashMessage' => $flashMessage,
             'data'=>['commentForm' => $form->createView(),
             'medias' => $medias,
             'comments' => $comments,
