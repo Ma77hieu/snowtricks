@@ -1,0 +1,18 @@
+@media (min-width: 768px) {
+    #heroSection {
+        height: 100vh;
+    }
+
+    .subHeroSection{
+        height:90%;
+        justify-content: center;
+        align-items: center;
+    }
+}
+@media (max-width: 767px) {
+    .subHeroSection{
+        height:400px;
+        justify-content: center;
+        align-items: center;
+    }
+}
