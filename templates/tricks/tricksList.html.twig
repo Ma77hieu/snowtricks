@@ -4,14 +4,14 @@
     {% include "tricks/_heroSection.html.twig" %}
     <div class="container-fluid" id="tricks_list_section">
         {# Tricks cards #}
-        <div class="row " id="tricks_row">
+        <div class="row justify-content-center" id="tricks_row">
             {% include "tricks/_tricksCards.html.twig" %}
         </div>
 
         {# "load more" and "go up" buttons #}
         <div class="row my-5 d-flex position-relative text-center">
             <div class="text-center">
-                <button id="next_tricks_button" href="#tricks_list_section" class="btn btn-primary px-3 "> Tricks suivants</button>
+                <button id="next_tricks_button" class="btn btn-primary px-3 "> Tricks suivants</button>
             </div>
             <div class="text-center ">
                 <a href="#tricks_list_section" class="btn btn-primary position-absolute bottom-0 end-0 p-4 m-3"> <i
