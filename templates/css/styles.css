@@ -1,9 +1,12 @@
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
     #heroSection {
         height: 100vh;
+        background:no-repeat center;
+        background-size:contain;
     }
 
     .subHeroSection{
+
         height:90%;
         justify-content: center;
         align-items: center;
@@ -13,9 +16,15 @@
         display:none;
     }
 }
-@media (max-width: 767px) {
+@media screen and (max-width: 767px) {
+
+    #heroSection {
+        height: 400px;
+        background:no-repeat center;
+        background-size:contain;
+
+    }
     .subHeroSection{
-        height:400px;
         justify-content: center;
         align-items: center;
     }
@@ -24,4 +33,9 @@
         display:none;
     }
 
+}
+.btnHeroSection{
+    height:40px;
+    width:40px;
+    margin:5px 0;
 }

@@ -46,32 +46,7 @@
         {% endfor %}
     </div>
 </div>
-<div class="row mt-2 d-flex justify-content-center">
-    {% if app.user %}
-        <div class="col-5 col-md-3 d-flex justify-content-center">
-            <a class="btn btn-primary text-center rounded p-2"
-               href="{{ path('Media.create', {trickId:trick.id,mediaType:1}) }}">Ajouter une image</a>
-        </div>
-        <div class="col-5 col-md-3 d-flex justify-content-center">
-            <a class="btn btn-primary text-center rounded p-2"
-               href="{{ path('Media.create', {trickId:trick.id,mediaType:2}) }}">Ajouter une video</a>
-        </div>
-    {% endif %}
-    {% if not app.user %}
-        <div class="row d-flex justify-content-center">
-            <div class="col-3 d-flex justify-content-center">
-                <div class="btn btn-primary text-center rounded p-2">
-                    <a class="text-white" href="{{ path('User.login') }}">Connectez-vous</a>
-                </div>
-            </div>
-            <div class="mx-1 text-center my-2">
-                pour ajouter des images ou des vidéos.
-            </div>
-        </div>
 
-    {% endif %}
-
-</div>
 <script>
     let showMediasBtn=document.getElementById('displayMediasBtn')
     let mediasDiv=document.getElementById('medias_section')
