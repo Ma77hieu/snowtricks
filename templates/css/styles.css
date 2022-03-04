@@ -1,6 +1,6 @@
 @media screen and (min-width: 768px) {
     #heroSection {
-        height: 100vh;
+        height: calc(100vh - 48px);
         background:no-repeat center;
         background-size:contain;
     }
@@ -19,7 +19,7 @@
 @media screen and (max-width: 767px) {
 
     #heroSection {
-        height: 400px;
+        height: calc(100vh - 48px);
         background:no-repeat center;
         background-size:contain;
 
@@ -38,4 +38,9 @@
     height:40px;
     width:40px;
     margin:5px 0;
+}
+
+#next_section_btn{
+    transform:translateY(-150%);
+    z-index:2;
 }
