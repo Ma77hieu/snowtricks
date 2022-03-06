@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Trick;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class CommentService
 {
     /**
@@ -29,7 +28,7 @@ class CommentService
      * @param int $trickId the ID of the trick for which the comment needs to be created
      * @param Request $request
      */
-    public function saveNewComment(int $trickId,  User $user, $commentText)
+    public function saveNewComment(int $trickId, User $user, $commentText)
     {
         $comment = new Comment();
         $trick = $this->em->find(Trick::class, $trickId);
@@ -51,7 +50,7 @@ class CommentService
      * @param int $trickId
      * @return array|false[]
      */
-    public function handleNewCommentForm(Request $request, $user,$form,int $trickId)
+    public function handleNewCommentForm(Request $request, $user, $form, int $trickId)
     {
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -60,22 +59,21 @@ class CommentService
                 $newCommentId = $this->saveNewComment($trickId, $user, $commentText);
                 if (gettype($newCommentId) == 'integer') {
                     $flashType = 'success';
-                    $flashMessage = 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.';
-                    /*$this->addFlash('success', 'Votre commentaire a été soumis, il est en attente de validation de notre équipe.');*/
+                    $flashMessage = 'Votre commentaire a été soumis, 
+                    il est en attente de validation de notre équipe.';
                 } else {
                     $flashType = 'danger';
-                    $flashMessage = 'Problème lors de la soumission de votre commentaire, veuillez réessayer';
-                    /*$this->addFlash('danger', 'Problème lors de la soumission de votre commentaire, veuillez réessayer');*/
+                    $flashMessage = 'Problème lors de la soumission de votre commentaire, 
+                    veuillez réessayer';
                 }
             } else {
                 $errors = $form->getErrors();
                 $flashType = 'danger';
                 $flashMessage = "$errors";
-                /*$this->addFlash('danger', "$errors");*/
             }
-            return ['needFlash'=>true,'flashType' => $flashType, 'flashMessage' => $flashMessage];
+            return ['needFlash' => true,'flashType' => $flashType, 'flashMessage' => $flashMessage];
         } else {
-            return ['needFlash'=>false];
+            return ['needFlash' => false];
         }
     }
 
@@ -88,7 +86,7 @@ class CommentService
      * @param int $commentId
      * @return mixed
      */
-    public function handleModificationForm(Request $request,$form, Comment $commentToUpdate,int $commentId)
+    public function handleModificationForm(Request $request, $form, Comment $commentToUpdate, int $commentId)
     {
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -103,14 +101,13 @@ class CommentService
                     'path' => 'Trick.show',
                     'flashType' => 'success',
                     'flashMessage' => "le commentaire Id $commentId a été modifié pour le trick $relatedTrickId",
-                    'data' => ['trickId'=>$relatedTrickId]];
-            }
-            else{
+                    'data' => ['trickId' => $relatedTrickId]];
+            } else {
                 $serviceReturn = ['returnType' => 'redirect',
                     'path' => 'Comment.update',
                     'flashType' => 'danger',
                     'flashMessage' => "Un problème est survenu avec la modification du commentaire, merci de reessayer",
-                    'data' => ['commentId'=>$commentId]];
+                    'data' => ['commentId' => $commentId]];
             }
             return $serviceReturn;
         }
@@ -118,8 +115,8 @@ class CommentService
             'path' => 'comments/commentEdition.html.twig',
             'flashType' => 'danger',
             'flashMessage' => null,
-            'data' => ['commentId'=>$commentId,
-                'commentEditionForm'=>$form->createView()]];
+            'data' => ['commentId' => $commentId,
+                'commentEditionForm' => $form->createView()]];
         return $serviceReturn;
     }
 
@@ -152,7 +149,8 @@ class CommentService
      * @param int $trickId
      * @return mixed
      */
-    public function validatedComsForTrickId(int $trickId){
+    public function validatedComsForTrickId(int $trickId)
+    {
         $commentRepository = $this->em->getRepository(Comment::class);
         $comments = $commentRepository->findOkComsTrickId($trickId);
         return $comments;
@@ -164,12 +162,12 @@ class CommentService
      * @param int $commentId
      * @return array
      */
-    public function deleteComment(int $commentId):array
+    public function deleteComment(int $commentId): array
     {
         $commentRepository = $this->em->getRepository(Comment::class);
         $commentToDelete = $commentRepository->find($commentId);
         $relatedTrickName = $commentToDelete->getTrick()->getName();
-        $trickId=$commentToDelete->getTrick()->getId();
+        $trickId = $commentToDelete->getTrick()->getId();
         $this->em->remove($commentToDelete);
         $this->em->flush();
         $serviceReturn = ['returnType' => 'redirect',

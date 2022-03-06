@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
 class TrickController extends AbstractController
 {
     /**
@@ -46,16 +45,17 @@ class TrickController extends AbstractController
      * Instanciation of trick controller
      * @param TrickServices $trickServices
      */
-    public function __construct(TrickServices $trickServices,
-                                EntityManagerInterface $em,
-                                MediaService $mediaService,
-                                CommentsController $commentController)
-    {
+    public function __construct(
+        TrickServices $trickServices,
+        EntityManagerInterface $em,
+        MediaService $mediaService,
+        CommentsController $commentController
+    ) {
         $this->trickServices = $trickServices;
-        $this->em=$em;
-        $this->commentService=new CommentService($em);
-        $this->mediaService=$mediaService;
-        $this->commentController=$commentController;
+        $this->em = $em;
+        $this->commentService = new CommentService($em);
+        $this->mediaService = $mediaService;
+        $this->commentController = $commentController;
     }
 
     /**
@@ -83,7 +83,7 @@ class TrickController extends AbstractController
         $user = $this->getUser();
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
-        $serviceReturn=$this->trickServices->showTrickDetails($request,$user,$form,$trickId);
+        $serviceReturn = $this->trickServices->showTrickDetails($request, $user, $form, $trickId);
         return $this->controllerReturn($serviceReturn);
     }
 
@@ -98,7 +98,7 @@ class TrickController extends AbstractController
         $trick = $this->em->find(Trick::class, $trickId);
         $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
-        $serviceReturn=$this->trickServices->handleTrickEditionForm($trickId, $form,$trick);
+        $serviceReturn = $this->trickServices->handleTrickEditionForm($trickId, $form, $trick);
         return $this->controllerReturn($serviceReturn);
     }
 
@@ -107,13 +107,12 @@ class TrickController extends AbstractController
      * @param int $trickId
      * @return Response
      */
-    public function delete(TrickServices $trickService,int $trickId):Response
+    public function delete(TrickServices $trickService, int $trickId): Response
     {
-        $isDeletionOk=$trickService->deleteTrickFromId($trickId);
-        if ($isDeletionOk==true){
+        $isDeletionOk = $trickService->deleteTrickFromId($trickId);
+        if ($isDeletionOk == true) {
             $this->addFlash('success', 'Vous avez supprimé un trick');
-        }
-        else {
+        } else {
             $this->addFlash('danger', 'Problème dans la suppression du trick');
         }
         return $this->redirectToRoute('index');

@@ -19,12 +19,11 @@ class MediaFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['type_of_media']==2){
+        if ($options['type_of_media'] == 2) {
             $builder
                 ->add('url')
             ;
-        }
-        else{
+        } else {
             $builder
                 /*->add('url')*/
                 ->add('isMain', CheckboxType::class, [
@@ -62,7 +61,7 @@ class MediaFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
-            'type_of_media'=>1,
+            'type_of_media' => 1,
         ]);
     }
 }

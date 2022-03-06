@@ -67,7 +67,7 @@ class MediaService
                             $type = $this->em->find(MediaType::class, $mediaType);
                             $media->setMediaType($type);
                             $media->setIsMain($form["isMain"]->getData());
-                        } else if ($mediaType == 2) {
+                        } elseif ($mediaType == 2) {
                             $urlConverted = $this->convertVideoUrl($file);
                             $urlAccepted = $this->checkVideoUrl($urlConverted);
                             $media->setIsMain(false);
@@ -75,7 +75,8 @@ class MediaService
                                 return ['returnType' => 'redirect',
                                     'path' => 'Media.create',
                                     'flashType' => 'danger',
-                                    'flashMessage' => "Merci de choisir une video youtube et cliquer sur \"partager\" puis \"integrer\"  
+                                    'flashMessage' => "Merci de choisir une video youtube et cliquer sur
+                                     \"partager\" puis \"integrer\"  
                                     Utilisez ensuite l'url commencant par https://www.youtube.com/embed",
                                     'data' => ['trickId' => $trickId,
                                         'mediaType' => $mediaType]];
@@ -93,7 +94,6 @@ class MediaService
                             'flashMessage' => 'Le média a été enregistré',
                             'data' => ['trickId' => $trickId]];
                     }
-
                 } else {
                     return ['returnType' => 'redirect',
                         'path' => 'Media.create',
@@ -102,7 +102,6 @@ class MediaService
                         'data' => ['trickId' => $trickId,
                             'mediaType' => $mediaType]];
                 }
-
             }
         }
         return ['returnType' => 'render',
@@ -122,7 +121,7 @@ class MediaService
      * @param bool $was_main was the media the main image before form submitting
      * @return array
      */
-    public function update(int $mediaId, $form,Media $mediaToUpdate,bool $was_main): array
+    public function update(int $mediaId, $form, Media $mediaToUpdate, bool $was_main): array
     {
         $currentUrl = $mediaToUpdate->getUrl();
         $trickId = $mediaToUpdate->getTrick()->getId();
@@ -144,7 +143,8 @@ class MediaService
                         $changes_done = true;
                     } else {
                         $flashType = 'danger';
-                        $flashMessage = "une erreur est survenue lors de l'enregistrement de l'image, description:" . $e;
+                        $flashMessage = "une erreur est survenue lors de 
+                        l'enregistrement de l'image, description:" . $e;
                     }
                 }
                 $is_main = $form->get('isMain')->getData();
@@ -154,7 +154,8 @@ class MediaService
                     $mediaRepository = $this->em->getRepository(Media::class);
                     $initialMainMedia = $mediaRepository->findMainMediaWithTrickId($trickId);
                     if ($is_main == true) {
-                        //set initial main media is_main value to false if updated media is not the same and requested to be main
+                        //set initial main media is_main value to false if
+                        // updated media is not the same and requested to be main
                         if ($initialMainMedia != null and ($initialMainMedia->getId() != $mediaId)) {
                             $initialMainMedia->setIsMain(false);
                             $this->em->persist($initialMainMedia);
@@ -176,7 +177,8 @@ class MediaService
                 if (($urlAccepted != true) || ($urlConverted == $currentUrl)) {
                     if ($urlAccepted != true) {
                         $flashType = 'danger';
-                        $flashMessage = "Format d'url incorrect. Format accepté https://www.youtube.com/watch?v=xxxxx OU https://www.youtube.com/embed/xxxx";
+                        $flashMessage = "Format d'url incorrect. Format accepté https://www.youtube.com/watch?v=xxxxx
+                         OU https://www.youtube.com/embed/xxxx";
                     }
                     if ($urlConverted == $currentUrl) {
                         $flashType = 'warning';

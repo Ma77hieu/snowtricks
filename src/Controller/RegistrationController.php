@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
             // encode the plain password
 
             $user->setPassword(
-            $userPasswordHasherInterface->hashPassword(
+                $userPasswordHasherInterface->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -46,7 +46,9 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('User.verify.email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'User.verify.email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('mat.ortlieb@gmail.com', 'Snowtricks mail bot'))
                     ->to($user->getEmail())
@@ -54,7 +56,10 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
-            $this->addFlash('warning', 'Un email vous a été envoyé pour finaliser la création de votre compte, il expirera dans une heure.');
+            $this->addFlash(
+                'warning',
+                'Un email vous a été envoyé pour finaliser la création de votre compte, il expirera dans une heure.'
+            );
 
             return $this->redirectToRoute('index');
         }

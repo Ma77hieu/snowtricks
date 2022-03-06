@@ -9,7 +9,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
-
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // last username entered by the user

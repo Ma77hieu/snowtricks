@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class MediaController extends AbstractController
 {
     /**
@@ -29,8 +28,11 @@ class MediaController extends AbstractController
     private GenericController $genericController;
 
 
-    public function __construct(MediaService $mediaService, EntityManagerInterface $em, GenericController $genericController)
-    {
+    public function __construct(
+        MediaService $mediaService,
+        EntityManagerInterface $em,
+        GenericController $genericController
+    ) {
         $this->mediaService = $mediaService;
         $this->em = $em;
         $this->genericController = $genericController;
@@ -84,7 +86,7 @@ class MediaController extends AbstractController
         $was_main = $mediaToUpdate->getIsMain();
         $form = $this->createForm(MediaFormType::class, $mediaToUpdate, array('type_of_media' => $type));
         $form->handleRequest($request);
-        $serviceReturn = $this->mediaService->update($mediaId, $form,$mediaToUpdate,$was_main);
+        $serviceReturn = $this->mediaService->update($mediaId, $form, $mediaToUpdate, $was_main);
         return $this->genericController->controllerReturn($serviceReturn);
     }
 }

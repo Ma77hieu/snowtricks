@@ -14,8 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TrickRepository extends ServiceEntityRepository
 {
+    public int $NBRE_TRICKS_BY_PAGE = 15;
 
-    public int $NBRE_TRICKS_BY_PAGE=15;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Trick::class);
@@ -32,7 +32,7 @@ class TrickRepository extends ServiceEntityRepository
 
     public function getTricksFromPage($pageNumber = 2)
     {
-        $tricksByPage=$this->NBRE_TRICKS_BY_PAGE;
+        $tricksByPage = $this->NBRE_TRICKS_BY_PAGE;
         $offset = $pageNumber * $tricksByPage;
         $firstResult = $offset - $tricksByPage;
         $lastResult = $offset;

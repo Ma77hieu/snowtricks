@@ -15,14 +15,15 @@ class HomepageController extends AbstractController
      * @param int $page used for pagination, each page represents a batch of tricks' cards
      * @return Response
      */
-    public function index(MediaService $mediaService,int $page = 1 ): Response
+    public function index(MediaService $mediaService, int $page = 1): Response
     {
         $trickRepository = $this->getDoctrine()->getRepository(Trick::class);
         $tricks = $trickRepository->getTricksFromPage($page);
         $mainMedias = $mediaService->getAllMainMedias();
         $mainMediasId = $mediaService->getMediasIds($mainMedias);
         if ($page == 1) {
-            return $this->render('tricks/tricksList.html.twig',
+            return $this->render(
+                'tricks/tricksList.html.twig',
                 [
                     'tricks' => $tricks,
                     'mainMedias' => $mainMedias,
@@ -31,7 +32,8 @@ class HomepageController extends AbstractController
             );
         } else {
             if ($tricks != null) {
-                return $this->render('tricks/_tricksCards.html.twig',
+                return $this->render(
+                    'tricks/_tricksCards.html.twig',
                     [
                         'tricks' => $tricks,
                         'mainMedias' => $mainMedias,

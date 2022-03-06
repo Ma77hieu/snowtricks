@@ -12,7 +12,6 @@ use App\Entity\Trick;
 
 class TrickServices
 {
-
     /**
      * @var CommentsController
      */
@@ -37,17 +36,19 @@ class TrickServices
      * Instanciation of trick service
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $em,
-                                MediaService $mediaService,
-                                CommentsController $commentController) {
+    public function __construct(
+        EntityManagerInterface $em,
+        MediaService $mediaService,
+        CommentsController $commentController
+    ) {
         $this->em = $em;
-        $this->mediaService=$mediaService;
-        $this->commentController=$commentController;
-        $this->commentService=new CommentService($em);
+        $this->mediaService = $mediaService;
+        $this->commentController = $commentController;
+        $this->commentService = new CommentService($em);
     }
 
 
-    public function createTrick($entityManager,$trick,$form):array
+    public function createTrick($entityManager, $trick, $form): array
     {
 
         if ($form->isSubmitted()) {
@@ -87,7 +88,7 @@ class TrickServices
      * @param int $trickId
      * @return bool
      */
-    public function deleteTrickFromId(int $trickId):bool
+    public function deleteTrickFromId(int $trickId): bool
     {
         $trick = $this->em->find(Trick::class, $trickId);
         if ($trick != null) {
@@ -106,24 +107,24 @@ class TrickServices
      * @param Trick $trick
      * @return array
      */
-    public function handleTrickEditionForm(int $trickId, $form,Trick $trick):array
+    public function handleTrickEditionForm(int $trickId, $form, Trick $trick): array
     {
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trick->setModificationDate(new \DateTime());
                 $this->em->merge($trick);
                 $this->em->flush();
-                $flashType='success';
-                $flashMsg='Trick mis à jour.';
-                $path='Trick.edit';
-                $data=['trickId'=>$trickId];
+                $flashType = 'success';
+                $flashMsg = 'Trick mis à jour.';
+                $path = 'Trick.edit';
+                $data = ['trickId' => $trickId];
             } else {
                 $errors = $form->getErrors();
                 $this->addFlash('danger', "$errors");
-                $flashType='danger';
-                $flashMsg="$errors";
-                $path='index';
-                $data=[];
+                $flashType = 'danger';
+                $flashMsg = "$errors";
+                $path = 'index';
+                $data = [];
             }
             return ['returnType' => 'redirect',
                 'path' => $path,
@@ -162,22 +163,22 @@ class TrickServices
      * @param $trickId
      * @return array
      */
-    public function showTrickDetails(Request $request, $user, $form, $trickId):array
+    public function showTrickDetails(Request $request, $user, $form, $trickId): array
     {
 
-        $commentManagement=$this->commentController->manageCommentForm($request,$user, $form, $trickId);
-        $flashType='';
-        $flashMessage='';
-        if ($commentManagement['needFlash']){
-            $flashType=$commentManagement['flashType'];
-            $flashMessage=$commentManagement['flashMessage'];
+        $commentManagement = $this->commentController->manageCommentForm($request, $user, $form, $trickId);
+        $flashType = '';
+        $flashMessage = '';
+        if ($commentManagement['needFlash']) {
+            $flashType = $commentManagement['flashType'];
+            $flashMessage = $commentManagement['flashMessage'];
         }
         $mediaRepository = $this->em->getRepository(Media::class);
         $medias = $mediaRepository->findByTrickId($trickId);
         $mainMedia = $this->mediaService->getMediaUrlAndId($medias);
         $mainMediaUrl = $mainMedia['mediaUrl'];
         $mainMediaId = $mainMedia['mediaId'];
-        $comments=$this->commentService->validatedComsForTrickId($trickId);
+        $comments = $this->commentService->validatedComsForTrickId($trickId);
         $trick = $this->em->find(Trick::class, $trickId);
         $group = $this->em->find(Group::class, $trick->getTrickGroup());
         $tags = [
@@ -190,10 +191,10 @@ class TrickServices
         }
 
         return ['returnType' => 'render',
-            'path'=>'tricks/trickDetails.html.twig',
+            'path' => 'tricks/trickDetails.html.twig',
             'flashType' => $flashType,
             'flashMessage' => $flashMessage,
-            'data'=>['commentForm' => $form->createView(),
+            'data' => ['commentForm' => $form->createView(),
             'medias' => $medias,
             'comments' => $comments,
             'trick' => $trick,
