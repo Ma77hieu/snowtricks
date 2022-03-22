@@ -40,4 +40,5 @@ security:
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/delete, roles: ROLE_USER }
+         - { path: ^/trickCreation, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
