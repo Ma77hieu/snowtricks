@@ -8,11 +8,8 @@
                     <img class="img-fluid rounded-circle my-auto"
                          src="https://www.w3schools.com/howto/img_avatar2.png" style="max-width:50px">
                     <div class="text-secondary">{{ comment.author.username }}</div>
-                    {% if comment.modification_date is defined %}
                         <div class="text-secondary">{{ comment.modificationDate |date("d/m/Y") }}</div>
-                    {% else %}
-                        <div class="text-secondary">{{ comment.creationDate |date("d/m/Y") }}</div>
-                    {% endif %}
+                        <div class="text-secondary">{{ comment.modificationDate |date("H:i") }}</div>
                 </div>
                 <div class="col-7 p-1">
                     <div class="border h-100 p-2">{{ comment.commentText }}</div>

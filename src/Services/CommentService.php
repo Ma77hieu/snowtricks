@@ -35,6 +35,8 @@ class CommentService
         $trick = $this->em->find(Trick::class, $trickId);
         $comment->setCommentText($commentText);
         $comment->setCreationDate(new \DateTime());
+        //also set the modification date, this way we can get the latest comments based on the modification date
+        $comment->setModificationDate(new \DateTime());
         $comment->setTrick($trick);
         $comment->setAuthor($user);
         $comment->setIsValidated(false);

@@ -42,13 +42,11 @@ class CommentRepository extends ServiceEntityRepository
             ->andWhere('c.trick = :val')
             ->andWhere('c.isValidated=true')
             ->setParameter('val', $trickId)
-            ->orderBy('c.id', 'ASC')
-            /*->setMaxResults(10)*/
+            ->orderBy('c.modificationDate', 'DESC')
             ->getQuery()
             ->getResult()
             ;
     }
-
 
     /**
      * @return Comment[] Returns an array of Comment objects
