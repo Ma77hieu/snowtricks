@@ -23,15 +23,16 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-4 px-0 py-1 ">
+                <div class="col-1 col-md-2"></div>
+                <div class="col-3 col-md-2 px-0 py-1 ">
                     {% if app.user and trick.name is defined %}
                     <row class="d-flex justify-content-center align-items-start flex-wrap" id="editButtonsHero">
                         {% if mainMediaId is defined and mainMediaId is not null %}
-                            <div class="col-6 col-md-12 px-1 text-center text-white">
+                            <div class="col-6 px-1 text-center text-white">
                                 <a class="btn btn-secondary text-center rounded btnHeroSection"
                                    href="{{ path('Media.update', {mediaId:mainMediaId}) }}"><i class="far fa-edit"></i></a>
                             </div>
-                            <div class="col-6 col-md-12 px-1 text-center">
+                            <div class="col-6 px-1 text-center">
                                 <a class="btn btn-danger text-center rounded btnHeroSection"
                                    href="{{ path('Media.delete', {mediaId:mainMediaId}) }}"><i
                                             class="far fa-trash-alt"></i></a>
@@ -57,7 +58,7 @@ based on the type of page on which the hero section is displayed#}
 {% else %}
     {%  set next_section = "#hideable_media_section" %}
 {% endif %}
-<div class="row translate-y justify-content-end">
+<div class="row translate-y justify-content-end" style="height: 20px">
         <a href="{{next_section}}" id="next_section_btn" class="btn btn-primary w-auto p-4 m-3" > <i
                     class="fas fa-arrow-down"></i> </a>
 </div>

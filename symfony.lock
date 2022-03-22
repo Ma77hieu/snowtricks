@@ -610,6 +610,15 @@
     "twig/extra-bundle": {
         "version": "v3.3.3"
     },
+    "twig/string-extra": {
+        "version": "0.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "0.0",
+            "ref": ""
+        }
+    },
     "twig/twig": {
         "version": "v3.3.3"
     },

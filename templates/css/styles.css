@@ -5,13 +5,6 @@
         background-size:contain;
     }
 
-    .subHeroSection{
-
-        height:90%;
-        justify-content: center;
-        align-items: center;
-    }
-
     #displayMediasBtn{
         display:none;
     }
@@ -23,10 +16,6 @@
         background:no-repeat center;
         background-size:contain;
 
-    }
-    .subHeroSection{
-        justify-content: center;
-        align-items: center;
     }
 
     #medias_section{
