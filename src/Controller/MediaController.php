@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class MediaController extends AbstractController
 {
@@ -67,10 +68,12 @@ class MediaController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($media);
         $entityManager->flush();
+        $slugger = new AsciiSlugger();
+        $slug = $slugger->slug($media->getTrick()->getName());
 
         $this->addFlash('success', 'Vous avez supprimé un media');
         return $this->redirectToRoute('Trick.show', [
-            'trickId' => $trickId]);
+            'trickId' => $trickId, 'slug'=>$slug]);
     }
 
     /**

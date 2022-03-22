@@ -7,6 +7,7 @@ use App\Entity\MediaType;
 use App\Entity\Trick;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class MediaService
@@ -88,11 +89,13 @@ class MediaService
                         $media->setTrick($trick);
                         $this->em->persist($media);
                         $this->em->flush();
+                        $slugger = new AsciiSlugger();
+                        $slug = $slugger->slug($trick->getName());
                         return ['returnType' => 'redirect',
                             'path' => 'Trick.show',
                             'flashType' => 'success',
                             'flashMessage' => 'Le média a été enregistré',
-                            'data' => ['trickId' => $trickId]];
+                            'data' => ['trickId' => $trickId, 'slug'=>$slug]];
                     }
                 } else {
                     return ['returnType' => 'redirect',
@@ -127,6 +130,8 @@ class MediaService
         $trickId = $mediaToUpdate->getTrick()->getId();
         $trickName = $mediaToUpdate->getTrick()->getName();
         $type = $mediaToUpdate->getMediaType()->getId();
+        $slugger = new AsciiSlugger();
+        $slug = $slugger->slug($trickName);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $url = $form->get('url')->getData();
@@ -187,7 +192,7 @@ class MediaService
                             'path' => 'Trick.show',
                             'flashType' => $flashType,
                             'flashMessage' => $flashMessage,
-                            'data' => ['trickId' => $trickId]];
+                            'data' => ['trickId' => $trickId,'slug'=>$slug]];
                     }
 
                     return ['returnType' => 'redirect',
@@ -211,7 +216,7 @@ class MediaService
                 'path' => 'Trick.show',
                 'flashType' => $flashType,
                 'flashMessage' => $flashMessage,
-                'data' => ['trickId' => $trickId]];
+                'data' => ['trickId' => $trickId,'slug'=>$slug]];
         }
         return ['returnType' => 'render',
             'path' => 'media/mediaCreation.html.twig',

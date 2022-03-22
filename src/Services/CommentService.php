@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Trick;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class CommentService
 {
@@ -97,11 +98,13 @@ class CommentService
                 $this->em->persist($commentToUpdate);
                 $this->em->flush();
                 $relatedTrickId = $commentToUpdate->getTrick()->getId();
+                $slugger = new AsciiSlugger();
+                $slug = $slugger->slug($commentToUpdate->getTrick()->getName());
                 $serviceReturn = ['returnType' => 'redirect',
                     'path' => 'Trick.show',
                     'flashType' => 'success',
                     'flashMessage' => "le commentaire Id $commentId a été modifié pour le trick $relatedTrickId",
-                    'data' => ['trickId' => $relatedTrickId]];
+                    'data' => ['trickId' => $relatedTrickId,'slug'=>$slug]];
             } else {
                 $serviceReturn = ['returnType' => 'redirect',
                     'path' => 'Comment.update',
