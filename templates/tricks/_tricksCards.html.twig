@@ -1,5 +1,6 @@
 
     {% for trick in tricks %}
+        {% set trickSlug= (trick.name |slug) %}
         <div class="col-11 col-md-3 d-flex justify-content-center">
             <div class="card shadow w-100 my-2 align-self-stretch">
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -14,20 +15,20 @@
                                 {% endfor %}
                             {% else %}
                                 <img class="img-fluid rounded" alt="image principale de la figure"
-                                     src="https://images.vexels.com/media/users/3/138249/isolated/lists/547f540b7088f1adcd50b17cc319a054-snowboarding-winter.png">
+                                     src="https://images.unsplash.com/photo-1418662589339-364ad47f98a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1464&q=80">
                             {% endif %}
                         </div>
                     </div>
                     <div class="row d-flex justify-content-center mt-2 border-top pt-2">
                         <div class="card-title d-flex justify-content-center">
                             <a class="text-center align-self-end"
-                               href="{{ path('Trick.show', {trickId:trick.id}) }}">{{ trick.name }}</a>
+                               href="{{ path('Trick.show', {trickId:trick.id,slug:trickSlug}) }}">{{ trick.name }}</a>
                         </div>
                         {% if app.user %}
                             <div class="row text-white mt-1 align-items-center ">
                                 <div class="col-6 text-center ">
                                     <a class="btn btn-secondary text-center rounded"
-                                       href="{{ path('Trick.edit', {trickId:trick.id}) }}"><i
+                                       href="{{ path('Trick.edit', {trickId:trick.id,slug:trickSlug}) }}"><i
                                                 class="far fa-edit"></i></a>
                                 </div>
                                 <div class="col-6 text-center ">

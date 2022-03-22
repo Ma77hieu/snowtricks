@@ -119,7 +119,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * Generic function used by the various funcitons of the controller to redirect or return the response
+     * Generic function used by the various functions of the controller to redirect or return the response
      * Also returns the datas to be sent to the templates and the flash message if one is needed
      * @param $input
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response

@@ -7,11 +7,11 @@ index.moreTricks:
     controller: App\Controller\HomepageController::index
 
 Trick.show:
-    path: /trick/{trickId}
+    path: /trick/details/{trickId}-{slug}
     controller: App\Controller\TrickController::show
 
 Trick.edit:
-    path: /trickEdition/{trickId}
+    path: /trick/edit/{trickId}-{slug}
     controller: App\Controller\TrickController::edit
 
 Trick.create:

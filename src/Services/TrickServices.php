@@ -5,10 +5,10 @@ namespace App\Services;
 use App\Controller\CommentsController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Media;
-use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Group;
 use App\Entity\Trick;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class TrickServices
 {
@@ -109,6 +109,8 @@ class TrickServices
      */
     public function handleTrickEditionForm(int $trickId, $form, Trick $trick): array
     {
+        $slugger = new AsciiSlugger();
+        $slug = $slugger->slug($trick->getName());
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $trick->setModificationDate(new \DateTime());
@@ -116,16 +118,12 @@ class TrickServices
                 $this->em->flush();
                 $flashType = 'success';
                 $flashMsg = 'Trick mis à jour.';
-                $path = 'Trick.edit';
-                $data = ['trickId' => $trickId];
             } else {
-                $errors = $form->getErrors();
-                $this->addFlash('danger', "$errors");
                 $flashType = 'danger';
-                $flashMsg = "$errors";
-                $path = 'index';
-                $data = [];
+                $flashMsg = "Vous ne pouvez pas modifier le nom de la figure pour un nom existant";
             }
+            $path = 'Trick.edit';
+            $data = ['trickId' => $trickId,'slug'=>$slug];
             return ['returnType' => 'redirect',
                 'path' => $path,
                 'flashType' => $flashType,
@@ -150,7 +148,8 @@ class TrickServices
                 'trick' => $trick,
                 'groups' => $groups,
                 'mainMediaUrl' => $mainMediaUrl,
-                'mainMediaId' => $mainMediaId]];
+                'mainMediaId' => $mainMediaId,
+                'slug'=>$slug]];
         return $serviceReturn;
     }
 
@@ -180,6 +179,8 @@ class TrickServices
         $mainMediaId = $mainMedia['mediaId'];
         $comments = $this->commentService->validatedComsForTrickId($trickId);
         $trick = $this->em->find(Trick::class, $trickId);
+        $slugger = new AsciiSlugger();
+        $slug = $slugger->slug($trick->getName());
         $group = $this->em->find(Group::class, $trick->getTrickGroup());
         $tags = [
             'date de creation' => $trick->getCreationDate()->format('Y-m-d H:i:s'),
@@ -195,11 +196,13 @@ class TrickServices
             'flashType' => $flashType,
             'flashMessage' => $flashMessage,
             'data' => ['commentForm' => $form->createView(),
-            'medias' => $medias,
-            'comments' => $comments,
-            'trick' => $trick,
-            'tags' => $tags,
-            'mainMediaUrl' => $mainMediaUrl,
-            'mainMediaId' => $mainMediaId]];
+                'medias' => $medias,
+                'comments' => $comments,
+                'trick' => $trick,
+                'tags' => $tags,
+                'mainMediaUrl' => $mainMediaUrl,
+                'mainMediaId' => $mainMediaId,
+                'slug' => $slug]
+        ];
     }
 }
