@@ -1,10 +1,19 @@
 {% extends 'generic/base.html.twig' %}
 {% block title %}Ajouter figure{% endblock %}
 {% block body %}
-    <div class="container" id="trick_creation">
+    <div class="container mt-3" id="trick_creation">
         <div class="row d-flex justify-content-center">
                 <div class="col-10">
                     {{ form_start(trickForm) }}
+                    {% if not trickForm.vars.valid %}
+                            {# Loop through every form item #}
+                            {% for child in trickForm.children %}
+                                {# Display the errors of the form item #}
+                                {%for error in child.vars.errors%}
+                                    <p class="bg-danger p-2 text-white rounded">{{error.message}}</p>
+                                {%endfor%}
+                            {%endfor%}
+                    {%endif%}
                     <div class="form-group mb-4">
                         <label for="trick_form_name" class="mb-3">Nom du trick:</label>
                         {{ form_widget(trickForm.name,{'attr': {'class': 'form-control'}}) }}
@@ -23,14 +32,6 @@
                     </div>
                     {{ form_end(trickForm) }}
                 </div>
-        </div>
-    </div>
-    <div class="container" id="trick_creation">
-        <!-- Medias cards -->
-        <div class="row d-flex justify-content-center">
-            <div class="col-2">
-
-            </div>
         </div>
     </div>
 
