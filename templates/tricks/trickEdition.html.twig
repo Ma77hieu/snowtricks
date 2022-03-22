@@ -36,6 +36,15 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-10">
                     {{ form_start(trickForm) }}
+                    {% if not trickForm.vars.valid %}
+                        {# Loop through every form item #}
+                        {% for child in trickForm.children %}
+                            {# Display the errors of the form item #}
+                            {%for error in child.vars.errors%}
+                                <p class="bg-danger p-2 text-white rounded">{{error.message}}</p>
+                            {%endfor%}
+                        {%endfor%}
+                    {%endif%}
                     <div class="form-group mb-4">
                         <label for="trick_form_name" class="mb-3">Nom du trick:</label>
                         {{ form_widget(trickForm.name,{'attr': {'class': 'form-control'}}) }}
@@ -60,7 +69,7 @@
         <!-- Button trigger modal -->
         <div class="row d-flex justify-content-center mb-2">
             <div class="col-3 text-center">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ trick.id }}">
                     Supprimer la figure
                 </button>
             </div>
