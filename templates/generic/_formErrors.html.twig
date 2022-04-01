@@ -1,0 +1,9 @@
+{% if not SpecificForm.vars.valid %}
+    {# Loop through every form item #}
+    {% for child in SpecificForm.children %}
+        {# Display the errors of the form item #}
+        {%for error in child.vars.errors%}
+            <p class="bg-danger p-2 text-white rounded">{{error.message}}</p>
+        {%endfor%}
+    {%endfor%}
+{%endif%}

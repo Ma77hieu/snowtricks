@@ -2,8 +2,8 @@
 {% block title %} Se connecter {% endblock %}
 {% block body %}
     <div class="container">
-        <div class="row vh-80 d-flex justify-content-center ">
-            <div class="col-11 col-md-4 vh-50 border rounded m-3 p-3">
+        <div class="row vh-80  mt-3 d-flex justify-content-center ">
+            <div class="col-10 col-md-4 vh-50 border rounded m-3 p-3">
                 <form action="{{ path('User.login') }}" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Nom d'utilisateur</label>
@@ -14,7 +14,7 @@
                         <input type="password" class="form-control" id="password" name="_password"/>
                     </div>
                     <div class="mb-4 text-center">
-                        <a href="#" class="mb-3">Mot de passe oublié</a>
+                        <a href="{{path('User.forgot')}}" class="mb-3">Mot de passe oublié</a>
                     </div>
 
                     <div class="text-center">

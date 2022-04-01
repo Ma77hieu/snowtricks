@@ -39,8 +39,12 @@ User.forgot:
     controller: App\Controller\UserController::forgot
 
 User.password.reset:
-    path: /changerMdp
+    path: /resetMdp
     controller: App\Controller\UserController::reset
+
+User.resetPwd.email:
+  path: /nouveauMdp
+  controller: App\Controller\RegistrationController::resetPwdFromMail
 
 User.verify.email:
     path: /verify/email

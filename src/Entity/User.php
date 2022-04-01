@@ -14,10 +14,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @UniqueEntity(fields={"username"}, message="Il y a déjà un utilisateur avec ce nom")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * Number of character of the reset paswword token
+     */
+    public const RESET_PWD_TOKEN_LENGTH=16;
+
+    /**
+     * Time before the resset password token expires
+     */
+    public const TIME_BEFORE_EXPIRATION='PT1H';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -56,6 +66,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author", orphanRemoval=true)
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetPwdToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpirationDate;
+
 
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
@@ -211,6 +232,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getResetPwdToken(): ?string
+    {
+        return $this->resetPwdToken;
+    }
+
+    public function setResetPwdToken(string $resetPwdToken): self{
+        $this->resetPwdToken=$resetPwdToken;
+
+        return $this;
+    }
+
+    public function getTokenExpirationDate(): ?\DateTimeInterface
+    {
+        return $this->tokenExpirationDate;
+    }
+
+    public function setTokenExpirationDate(?\DateTimeInterface $tokenExpirationDate): self{
+        $this->tokenExpirationDate=$tokenExpirationDate;
 
         return $this;
     }

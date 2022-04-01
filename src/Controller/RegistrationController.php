@@ -3,72 +3,74 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\NewPwdFormType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
+    /**
+     * @var UserService
+     */
+    private UserService $userService;
+
+    /**
+     * @var EmailVerifier
+     */
     private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    /**
+     * @var UserPasswordHasherInterface
+     */
+    private UserPasswordHasherInterface $userPasswordHasher;
+
+    public function __construct(EmailVerifier $emailVerifier, UserService $userService, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->userService = $userService;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    /**
+     * Used to register a new user
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasherInterface
+     * @return Response
+     */
+    public function register(UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-
-            $user->setPassword(
-                $userPasswordHasherInterface->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $user->setRoles(["ROLE_USER"]);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'User.verify.email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mat.ortlieb@gmail.com', 'Snowtricks mail bot'))
-                    ->to($user->getEmail())
-                    ->subject('Merci de confirmer votre Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+            $plainPassword = $form->get('plainPassword')->getData();
+            $this->userService->saveHashedPassword($userPasswordHasherInterface, $user, $plainPassword);
+            $this->userService->persistUser($user);
+            $this->userService->sendConfirmationMail($user);
             $this->addFlash(
                 'warning',
                 'Un email vous a été envoyé pour finaliser la création de votre compte, il expirera dans une heure.'
             );
-
             return $this->redirectToRoute('index');
+        } else {
+            return $this->render('user/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
         }
-
-        return $this->render('user/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
     }
 
+    /**
+     * Road called by a click on the link of the verification email sent when a user signup
+     * @param Request $request
+     * @return Response
+     */
     public function verifyUserEmail(Request $request): Response
     {
 
@@ -86,5 +88,40 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Votre adresse mail a été vérifiée.');
 
         return $this->redirectToRoute('index');
+    }
+
+    /**
+     * Road called by a click on the link of the reset pwd email sent when a user
+     * follows the reset password procedure
+     * @param Request $request
+     * @return Response
+     */
+    public function resetPwdFromMail(Request $request): Response
+    {
+        $token = $request->query->get('token');
+        $user = new User();
+        $form = $this->createForm(NewPwdFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $username = $form->get('username')->getData();
+            $userReset = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $username]);
+            $isValidToken = $this->userService->verifyTokenValidity($userReset, $token);
+            if ($isValidToken) {
+                $plainPassword = $form->get('plainPassword')->getData();
+                $this->userService->saveHashedPassword($this->userPasswordHasher,$userReset,$plainPassword);
+                $userReset->setIsVerified(true);
+                $userReset->setResetPwdToken('');
+                $this->userService->persistUser($userReset);
+                $this->addFlash('success', 'Votre changement de mot de passe a été effectué.');
+                return $this->redirectToRoute('index');
+            } else {
+                $this->addFlash('danger', 'Problème avec la réinitialisation, veuillez recommencer la procédure de renouvellement.');
+                return $this->redirectToRoute('User.forgot');
+            }
+        }
+        return $this->render('user/resetPassword.html.twig', [
+            'newPwdForm' => $form->createView(),
+        ]);
     }
 }

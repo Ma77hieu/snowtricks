@@ -30,6 +30,7 @@ class EmailVerifier
         string $verifyEmailRouteName,
         UserInterface $user,
         TemplatedEmail $email
+
     ): void {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
