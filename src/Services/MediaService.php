@@ -95,7 +95,7 @@ class MediaService
                             'path' => 'Trick.show',
                             'flashType' => 'success',
                             'flashMessage' => 'Le média a été enregistré',
-                            'data' => ['trickId' => $trickId, 'slug'=>$slug]];
+                            'data' => ['trickId' => $trickId, 'slug' => $slug]];
                     }
                 } else {
                     return ['returnType' => 'redirect',

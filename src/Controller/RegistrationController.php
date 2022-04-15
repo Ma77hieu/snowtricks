@@ -30,7 +30,9 @@ class RegistrationController extends AbstractController
      */
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(EmailVerifier $emailVerifier, UserService $userService, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(EmailVerifier $emailVerifier,
+                                UserService $userService,
+                                UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->emailVerifier = $emailVerifier;
         $this->userService = $userService;
@@ -116,7 +118,8 @@ class RegistrationController extends AbstractController
                 $this->addFlash('success', 'Votre changement de mot de passe a été effectué.');
                 return $this->redirectToRoute('index');
             } else {
-                $this->addFlash('danger', 'Problème avec la réinitialisation, veuillez recommencer la procédure de renouvellement.');
+                $this->addFlash('danger',
+                    'Problème avec la réinitialisation, veuillez recommencer la procédure de renouvellement.');
                 return $this->redirectToRoute('User.forgot');
             }
         }

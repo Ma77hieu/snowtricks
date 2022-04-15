@@ -149,7 +149,7 @@ class TrickServices
                 'groups' => $groups,
                 'mainMediaUrl' => $mainMediaUrl,
                 'mainMediaId' => $mainMediaId,
-                'slug'=>$slug]];
+                'slug' => $slug]];
         return $serviceReturn;
     }
 

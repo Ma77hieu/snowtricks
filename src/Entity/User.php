@@ -21,12 +21,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Number of character of the reset paswword token
      */
-    public const RESET_PWD_TOKEN_LENGTH=16;
+    public const RESET_PWD_TOKEN_LENGTH = 16;
 
     /**
      * Time before the resset password token expires
      */
-    public const TIME_BEFORE_EXPIRATION='PT1H';
+    public const TIME_BEFORE_EXPIRATION = 'PT1H';
 
     /**
      * @ORM\Id
@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     public function setUsername(string $username): self
@@ -115,7 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
@@ -241,8 +241,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->resetPwdToken;
     }
 
-    public function setResetPwdToken(string $resetPwdToken): self{
-        $this->resetPwdToken=$resetPwdToken;
+    public function setResetPwdToken(string $resetPwdToken): self
+    {
+        $this->resetPwdToken = $resetPwdToken;
 
         return $this;
     }
@@ -252,8 +253,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tokenExpirationDate;
     }
 
-    public function setTokenExpirationDate(?\DateTimeInterface $tokenExpirationDate): self{
-        $this->tokenExpirationDate=$tokenExpirationDate;
+    public function setTokenExpirationDate(?\DateTimeInterface $tokenExpirationDate): self
+    {
+        $this->tokenExpirationDate = $tokenExpirationDate;
 
         return $this;
     }

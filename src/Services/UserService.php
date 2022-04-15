@@ -34,7 +34,9 @@ class UserService
      */
     public string $emailError='';
 
-    public function __construct(EntityManagerInterface $em, EmailVerifier $emailVerifier, MailerInterface $mailerInterface)
+    public function __construct(EntityManagerInterface $em,
+                                EmailVerifier $emailVerifier,
+                                MailerInterface $mailerInterface)
     {
         $this->em = $em;
         $this->emailVerifier = $emailVerifier;
@@ -48,7 +50,9 @@ class UserService
      * @param User $user
      * @param string $plainPassword
      */
-    public function saveHashedPassword(UserPasswordHasherInterface $userPasswordHasherInterface, User $user, string $plainPassword)
+    public function saveHashedPassword(UserPasswordHasherInterface $userPasswordHasherInterface,
+                                       User $user,
+                                       string $plainPassword)
     {
         // encode the plain password
         $user->setPassword(
@@ -117,7 +121,7 @@ class UserService
         try {
             $this->mailerInterface->send($email);
         } catch (TransportExceptionInterface $e) {
-            $this->emailError=$e;
+            $this->emailError = $e;
         }
     }
 

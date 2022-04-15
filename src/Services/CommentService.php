@@ -106,7 +106,7 @@ class CommentService
                     'path' => 'Trick.show',
                     'flashType' => 'success',
                     'flashMessage' => "le commentaire Id $commentId a été modifié pour le trick $relatedTrickId",
-                    'data' => ['trickId' => $relatedTrickId,'slug'=>$slug]];
+                    'data' => ['trickId' => $relatedTrickId,'slug' => $slug]];
             } else {
                 $serviceReturn = ['returnType' => 'redirect',
                     'path' => 'Comment.update',

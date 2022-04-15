@@ -7,7 +7,6 @@ use App\Services\UserService;
 use App\Form\ResetPwdFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\PropertyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
@@ -77,5 +76,4 @@ class UserController extends AbstractController
             'resetPwdForm' => $form->createView(),
         ]);
     }
-
 }
