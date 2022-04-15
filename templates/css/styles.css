@@ -1,35 +1,35 @@
 @media screen and (min-width: 768px) {
     #heroSection {
         height: calc(100vh - 48px);
-        background:no-repeat center;
-        background-size:contain;
+        background: no-repeat center;
+        background-size: contain;
     }
 
-    #displayMediasBtn{
-        display:none;
+    #displayMediasBtn {
+        display: none;
     }
 }
-@media screen and (max-width: 767px) {
 
+@media screen and (max-width: 767px) {
     #heroSection {
         height: calc(100vh - 48px);
-        background:no-repeat center;
-        background-size:contain;
+        background: no-repeat center;
+        background-size: contain;
 
     }
 
-    #medias_section{
-        display:none;
+    #medias_section {
+        display: none;
     }
-
-}
-.btnHeroSection{
-    height:40px;
-    width:40px;
-    margin:5px 0;
 }
 
-#next_section_btn{
-    transform:translateY(-150%);
-    z-index:2;
+.btnHeroSection {
+    height: 40px;
+    width: 40px;
+    margin: 5px 0;
+}
+
+#next_section_btn {
+    transform: translateY(-150%);
+    z-index: 2;
 }

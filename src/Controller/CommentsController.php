@@ -130,9 +130,8 @@ class CommentsController extends AbstractController
         }
         if ($returnType === 'redirect') {
             return $this->redirectToRoute($path, $data);
-        } else {
-            $this->addFlash("danger", "une erreur interne est survenue, vous avez été redirigé vers la page d'accueil");
-            return $this->redirectToRoute('index');
         }
+        $this->addFlash("danger", "une erreur interne est survenue, vous avez été redirigé vers la page d'accueil");
+        return $this->redirectToRoute('index');
     }
 }

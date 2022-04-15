@@ -38,9 +38,10 @@ class TrickServices
      */
     public function __construct(
         EntityManagerInterface $em,
-        MediaService $mediaService,
-        CommentsController $commentController
-    ) {
+        MediaService           $mediaService,
+        CommentsController     $commentController
+    )
+    {
         $this->em = $em;
         $this->mediaService = $mediaService;
         $this->commentController = $commentController;
@@ -92,8 +93,8 @@ class TrickServices
     {
         $trick = $this->em->find(Trick::class, $trickId);
         if ($trick != null) {
-                $this->em->remove($trick);
-                $this->em->flush();
+            $this->em->remove($trick);
+            $this->em->flush();
             return true;
         } else {
             return false;
@@ -123,7 +124,7 @@ class TrickServices
                 $flashMsg = "Vous ne pouvez pas modifier le nom de la figure pour un nom existant";
             }
             $path = 'Trick.edit';
-            $data = ['trickId' => $trickId,'slug'=>$slug];
+            $data = ['trickId' => $trickId, 'slug' => $slug];
             return ['returnType' => 'redirect',
                 'path' => $path,
                 'flashType' => $flashType,

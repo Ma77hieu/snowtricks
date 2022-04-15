@@ -30,9 +30,10 @@ class RegistrationController extends AbstractController
      */
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(EmailVerifier $emailVerifier,
-                                UserService $userService,
-                                UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(
+        EmailVerifier               $emailVerifier,
+        UserService                 $userService,
+        UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->emailVerifier = $emailVerifier;
         $this->userService = $userService;
@@ -111,14 +112,15 @@ class RegistrationController extends AbstractController
             $isValidToken = $this->userService->verifyTokenValidity($userReset, $token);
             if ($isValidToken) {
                 $plainPassword = $form->get('plainPassword')->getData();
-                $this->userService->saveHashedPassword($this->userPasswordHasher,$userReset,$plainPassword);
+                $this->userService->saveHashedPassword($this->userPasswordHasher, $userReset, $plainPassword);
                 $userReset->setIsVerified(true);
                 $userReset->setResetPwdToken('');
                 $this->userService->persistUser($userReset);
                 $this->addFlash('success', 'Votre changement de mot de passe a été effectué.');
                 return $this->redirectToRoute('index');
             } else {
-                $this->addFlash('danger',
+                $this->addFlash(
+                    'danger',
                     'Problème avec la réinitialisation, veuillez recommencer la procédure de renouvellement.');
                 return $this->redirectToRoute('User.forgot');
             }

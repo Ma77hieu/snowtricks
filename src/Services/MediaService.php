@@ -192,7 +192,7 @@ class MediaService
                             'path' => 'Trick.show',
                             'flashType' => $flashType,
                             'flashMessage' => $flashMessage,
-                            'data' => ['trickId' => $trickId,'slug'=>$slug]];
+                            'data' => ['trickId' => $trickId, 'slug' => $slug]];
                     }
 
                     return ['returnType' => 'redirect',
@@ -216,7 +216,7 @@ class MediaService
                 'path' => 'Trick.show',
                 'flashType' => $flashType,
                 'flashMessage' => $flashMessage,
-                'data' => ['trickId' => $trickId,'slug'=>$slug]];
+                'data' => ['trickId' => $trickId, 'slug' => $slug]];
         }
         return ['returnType' => 'render',
             'path' => 'media/mediaCreation.html.twig',

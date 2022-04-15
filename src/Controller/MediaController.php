@@ -73,7 +73,7 @@ class MediaController extends AbstractController
 
         $this->addFlash('success', 'Vous avez supprimé un media');
         return $this->redirectToRoute('Trick.show', [
-            'trickId' => $trickId, 'slug'=>$slug]);
+            'trickId' => $trickId, 'slug' => $slug]);
     }
 
     /**

@@ -11,7 +11,7 @@ class ResetPwdFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username',null,['required'=>true])
+            ->add('username', null, ['required' => true])
         ;
     }
 
