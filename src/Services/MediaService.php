@@ -97,14 +97,13 @@ class MediaService
                             'flashMessage' => 'Le média a été enregistré',
                             'data' => ['trickId' => $trickId, 'slug' => $slug]];
                     }
-                } else {
-                    return ['returnType' => 'redirect',
-                        'path' => 'Media.create',
-                        'flashType' => 'danger',
-                        'flashMessage' => 'Merci de choisir une image à uploader ou une url valide avant de valider',
-                        'data' => ['trickId' => $trickId,
-                            'mediaType' => $mediaType]];
                 }
+                return ['returnType' => 'redirect',
+                    'path' => 'Media.create',
+                    'flashType' => 'danger',
+                    'flashMessage' => 'Merci de choisir une image à uploader ou une url valide avant de valider',
+                    'data' => ['trickId' => $trickId,
+                        'mediaType' => $mediaType]];
             }
         }
         return ['returnType' => 'render',
@@ -322,10 +321,10 @@ class MediaService
                 $newFilename
             );
             $fileCreationError = null;
-        } catch (FileException $e) {
+        } catch (FileException $fileError) {
             // ... handle exception if something happens during file upload
             $newFilename = null;
-            $fileCreationError = $e;
+            $fileCreationError = $fileError;
         }
         return ['newFilename' => $newFilename, 'fileCreationError' => $fileCreationError];
     }

@@ -36,9 +36,9 @@ class UserService
 
     public function __construct(
         EntityManagerInterface $em,
-        EmailVerifier          $emailVerifier,
-        MailerInterface        $mailerInterface)
-    {
+        EmailVerifier $emailVerifier,
+        MailerInterface $mailerInterface
+    ){
         $this->em = $em;
         $this->emailVerifier = $emailVerifier;
         $this->mailerInterface = $mailerInterface;
@@ -47,18 +47,18 @@ class UserService
     /**
      * associate the new password (hashed) to the password attribute of the user entity
      * WARNING: user entity needs ot be persisted after this function is executed
-     * @param UserPasswordHasherInterface $userPasswordHasherInterface
+     * @param UserPasswordHasherInterface $userPwdHasherInt
      * @param User $user
      * @param string $plainPassword
      */
     public function saveHashedPassword(
-        UserPasswordHasherInterface $userPasswordHasherInterface,
-        User                        $user,
-        string                      $plainPassword)
-    {
+        UserPasswordHasherInterface $userPwdHasherInt,
+        User $user,
+        string $plainPassword
+    ){
         // encode the plain password
         $user->setPassword(
-            $userPasswordHasherInterface->hashPassword(
+            $userPwdHasherInt->hashPassword(
                 $user,
                 $plainPassword
             )
@@ -158,8 +158,7 @@ class UserService
         $tokenInDb = $user->getResetPwdToken();
         if ($token == $tokenInDb && $now < $user->getTokenExpirationDate()) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Services\CommentService;
-use App\Services\MediaService;
 use App\Services\TrickServices;
 use App\Entity\Comment;
 use App\Entity\Trick;
@@ -32,11 +31,6 @@ class TrickController extends AbstractController
     private EntityManagerInterface $em;
 
     /**
-     * @var MediaService
-     */
-    private MediaService $mediaService;
-
-    /**
      * @var CommentsController
      */
     private CommentsController $commentController;
@@ -48,13 +42,11 @@ class TrickController extends AbstractController
     public function __construct(
         TrickServices $trickServices,
         EntityManagerInterface $em,
-        MediaService $mediaService,
         CommentsController $commentController
     ) {
         $this->trickServices = $trickServices;
         $this->em = $em;
         $this->commentService = new CommentService($em);
-        $this->mediaService = $mediaService;
         $this->commentController = $commentController;
     }
 
@@ -93,7 +85,7 @@ class TrickController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(MediaService $mediaService, int $trickId, Request $request): Response
+    public function edit(int $trickId, Request $request): Response
     {
         $trick = $this->em->find(Trick::class, $trickId);
         $form = $this->createForm(TrickFormType::class, $trick);

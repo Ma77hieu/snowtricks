@@ -58,12 +58,11 @@ class UserController extends AbstractController
                 if ($this->userService->emailError == '') {
                     $this->addFlash("success", "Un email pour réinitialiser votre mot de passe vous a été envoyé");
                     return $this->redirectToRoute('index');
-                } else {
-                    $this->addFlash("danger", "Problème lors de l'envoi de l'email, merci de rééssayer");
-                    return $this->render('user/forgotPassword.html.twig', [
-                        'resetPwdForm' => $form->createView(),
-                    ]);
                 }
+                $this->addFlash("danger", "Problème lors de l'envoi de l'email, merci de rééssayer");
+                return $this->render('user/forgotPassword.html.twig', [
+                    'resetPwdForm' => $form->createView(),
+                ]);
             } else {
                 $this->addFlash("danger", "Il n'existe pas d'utilisateur avec ce nom d'utilisateur");
                 return $this->render('user/forgotPassword.html.twig', [

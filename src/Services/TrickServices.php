@@ -38,10 +38,9 @@ class TrickServices
      */
     public function __construct(
         EntityManagerInterface $em,
-        MediaService           $mediaService,
-        CommentsController     $commentController
-    )
-    {
+        MediaService $mediaService,
+        CommentsController $commentController
+    ){
         $this->em = $em;
         $this->mediaService = $mediaService;
         $this->commentController = $commentController;
@@ -62,19 +61,18 @@ class TrickServices
                 //save the trick into database
                 $entityManager->persist($trick);
                 $entityManager->flush();
-                $serviceAnswer = ['returnType' => 'redirect',
+                return ['returnType' => 'redirect',
                     'path' => 'index',
                     'flashType' => 'success',
                     'flashMessage' => 'Le trick a été créé',
                     'data' => []];
-            } else {
-                $serviceAnswer = ['returnType' => 'render',
-                    'path' => 'tricks/trickCreation.html.twig',
-                    'flashType' => 'danger',
-                    'flashMessage' => 'Une erreur est survenue, voir le formulaire pour plus de détails',
-                    'data' => ['trickForm' => $form->createView()]];
             }
-            return $serviceAnswer;
+            return ['returnType' => 'render',
+                'path' => 'tricks/trickCreation.html.twig',
+                'flashType' => 'danger',
+                'flashMessage' => 'Une erreur est survenue, voir le formulaire pour plus de détails',
+                'data' => ['trickForm' => $form->createView()]];
+
         }
         $serviceAnswer = ['returnType' => 'render',
             'path' => 'tricks/trickCreation.html.twig',

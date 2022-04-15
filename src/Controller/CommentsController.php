@@ -7,7 +7,6 @@ use App\Form\CommentFormType;
 use App\Services\CommentService;
 use App\Services\CommentsServices;
 use App\Services\MediaService;
-use App\Services\TrickServices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommentsController extends AbstractController
 {
-    /**
-     * @var TrickServices
-     */
-    private TrickServices $trickServices;
-
     /**
      * @var CommentService
      */
@@ -45,10 +39,9 @@ class CommentsController extends AbstractController
 
     /**
      * Display the unvalidated comments in the comments validation page
-     * @param Request $request
      * @return Response
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
         $comments = $commentRepository->findByValidationStatus('false');

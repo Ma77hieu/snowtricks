@@ -40,9 +40,8 @@ class HomepageController extends AbstractController
                         'mainMediasId' => $mainMediasId,
                     ]
                 );
-            } else {
-                return $this->render('tricks/_noMoreTricks.html.twig');
             }
+            return $this->render('tricks/_noMoreTricks.html.twig');
         }
     }
 }

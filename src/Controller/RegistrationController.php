@@ -31,10 +31,10 @@ class RegistrationController extends AbstractController
     private UserPasswordHasherInterface $userPasswordHasher;
 
     public function __construct(
-        EmailVerifier               $emailVerifier,
-        UserService                 $userService,
-        UserPasswordHasherInterface $userPasswordHasher)
-    {
+        EmailVerifier $emailVerifier,
+        UserService $userService,
+        UserPasswordHasherInterface $userPasswordHasher
+    ){
         $this->emailVerifier = $emailVerifier;
         $this->userService = $userService;
         $this->userPasswordHasher = $userPasswordHasher;
@@ -43,10 +43,10 @@ class RegistrationController extends AbstractController
     /**
      * Used to register a new user
      * @param Request $request
-     * @param UserPasswordHasherInterface $userPasswordHasherInterface
+     * @param UserPasswordHasherInterface $userPwdHasherInt
      * @return Response
      */
-    public function register(UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
+    public function register(UserPasswordHasherInterface $userPwdHasherInt, Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
-            $this->userService->saveHashedPassword($userPasswordHasherInterface, $user, $plainPassword);
+            $this->userService->saveHashedPassword($userPwdHasherInt, $user, $plainPassword);
             $this->userService->persistUser($user);
             $this->userService->sendConfirmationMail($user);
             $this->addFlash(
@@ -102,7 +102,6 @@ class RegistrationController extends AbstractController
     public function resetPwdFromMail(Request $request): Response
     {
         $token = $request->query->get('token');
-        $user = new User();
         $form = $this->createForm(NewPwdFormType::class);
         $form->handleRequest($request);
 
