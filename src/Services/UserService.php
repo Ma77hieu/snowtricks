@@ -55,7 +55,7 @@ class UserService
         UserPasswordHasherInterface $userPwdHasherInt,
         User $user,
         string $plainPassword
-    ){
+    ) {
         // encode the plain password
         $user->setPassword(
             $userPwdHasherInt->hashPassword(

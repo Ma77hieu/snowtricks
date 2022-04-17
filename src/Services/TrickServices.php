@@ -40,7 +40,7 @@ class TrickServices
         EntityManagerInterface $em,
         MediaService $mediaService,
         CommentsController $commentController
-    ){
+    ) {
         $this->em = $em;
         $this->mediaService = $mediaService;
         $this->commentController = $commentController;
@@ -72,7 +72,6 @@ class TrickServices
                 'flashType' => 'danger',
                 'flashMessage' => 'Une erreur est survenue, voir le formulaire pour plus de détails',
                 'data' => ['trickForm' => $form->createView()]];
-
         }
         $serviceAnswer = ['returnType' => 'render',
             'path' => 'tricks/trickCreation.html.twig',
@@ -94,9 +93,8 @@ class TrickServices
             $this->em->remove($trick);
             $this->em->flush();
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

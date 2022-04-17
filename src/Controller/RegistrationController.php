@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
         EmailVerifier $emailVerifier,
         UserService $userService,
         UserPasswordHasherInterface $userPasswordHasher
-    ){
+    ) {
         $this->emailVerifier = $emailVerifier;
         $this->userService = $userService;
         $this->userPasswordHasher = $userPasswordHasher;
@@ -62,11 +62,10 @@ class RegistrationController extends AbstractController
                 'Un email vous a été envoyé pour finaliser la création de votre compte, il expirera dans une heure.'
             );
             return $this->redirectToRoute('index');
-        } else {
-            return $this->render('user/register.html.twig', [
-                'registrationForm' => $form->createView(),
-            ]);
         }
+        return $this->render('user/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
     }
 
     /**

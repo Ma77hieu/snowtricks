@@ -11,6 +11,15 @@
         <div class="row d-flex justify-content-center">
             <div class="col-10">
                 {{ form_start(mediaForm) }}
+                {% if not mediaForm.vars.valid %}
+                    {# Loop through every form item #}
+                    {% for child in mediaForm.children %}
+                        {# Display the errors of the form item #}
+                        {%for error in child.vars.errors%}
+                            <p class="bg-danger p-2 text-white rounded">{{error.message}}</p>
+                        {%endfor%}
+                    {%endfor%}
+                {%endif%}
                 {% if mediaType==1 %}
                     <div class="form-group mb-4">
                         <label for="media_form_url" class="mb-2">Fichier:</label>

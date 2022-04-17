@@ -63,12 +63,11 @@ class UserController extends AbstractController
                 return $this->render('user/forgotPassword.html.twig', [
                     'resetPwdForm' => $form->createView(),
                 ]);
-            } else {
-                $this->addFlash("danger", "Il n'existe pas d'utilisateur avec ce nom d'utilisateur");
-                return $this->render('user/forgotPassword.html.twig', [
-                    'resetPwdForm' => $form->createView(),
-                ]);
             }
+            $this->addFlash("danger", "Il n'existe pas d'utilisateur avec ce nom d'utilisateur");
+            return $this->render('user/forgotPassword.html.twig', [
+                'resetPwdForm' => $form->createView(),
+            ]);
         }
         return $this->render('user/forgotPassword.html.twig', [
             'resetPwdForm' => $form->createView(),

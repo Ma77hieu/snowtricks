@@ -30,18 +30,17 @@ class HomepageController extends AbstractController
                     'mainMediasId' => $mainMediasId,
                 ]
             );
-        } else {
-            if ($tricks != null) {
-                return $this->render(
-                    'tricks/_tricksCards.html.twig',
-                    [
-                        'tricks' => $tricks,
-                        'mainMedias' => $mainMedias,
-                        'mainMediasId' => $mainMediasId,
-                    ]
-                );
-            }
-            return $this->render('tricks/_noMoreTricks.html.twig');
         }
+        if ($tricks != null) {
+            return $this->render(
+                'tricks/_tricksCards.html.twig',
+                [
+                    'tricks' => $tricks,
+                    'mainMedias' => $mainMedias,
+                    'mainMediasId' => $mainMediasId,
+                ]
+            );
+        }
+        return $this->render('tricks/_noMoreTricks.html.twig');
     }
 }

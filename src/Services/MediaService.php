@@ -58,11 +58,11 @@ class MediaService
                     //if the file is an image, we manage the uploading
                     if ($mediaType == 1) {
                         $fileCreation = $this->createNewFile($this->slugger, $file);
-                        $e = $fileCreation['fileCreationError'];
+                        $fileError = $fileCreation['fileCreationError'];
                         $newFilename = $fileCreation['newFilename'];
                     }
                     //next condition is true if there was no problem during file upload or if the media is a video
-                    if (!isset($e)) {
+                    if (!isset($fileError)) {
                         if ($mediaType == 1) {
                             $media->setUrl($newFilename);
                             $type = $this->em->find(MediaType::class, $mediaType);
@@ -138,9 +138,9 @@ class MediaService
             if ($type == 1) {
                 if ($url) {
                     $fileCreation = $this->createNewFile($this->slugger, $url);
-                    $e = $fileCreation['fileCreationError'];
+                    $fileError = $fileCreation['fileCreationError'];
                     $newFilename = $fileCreation['newFilename'];
-                    if (!isset($e)) {
+                    if (!isset($fileError)) {
                         $mediaToUpdate->setUrl($newFilename);
                         $flashType = 'success';
                         $flashMessage = "Modification de l'image effectuée";
@@ -148,7 +148,7 @@ class MediaService
                     } else {
                         $flashType = 'danger';
                         $flashMessage = "une erreur est survenue lors de 
-                        l'enregistrement de l'image, description:" . $e;
+                        l'enregistrement de l'image, description:" . $fileError;
                     }
                 }
                 $is_main = $form->get('isMain')->getData();
