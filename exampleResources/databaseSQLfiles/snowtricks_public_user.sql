@@ -1,0 +1,15 @@
+insert into public.user (id, username, roles, password, email, is_verified, reset_pwd_token, token_expiration_date)
+values  (6, 'mat5', '["ROLE_ADMIN"]', '$2y$13$oWaScLS9dd7HauDXlV/GVe/3aoXdn.zTgkIUC62iJQ6sfiBIuAciO', 'mat091@hotmail.com', true, null, null),
+        (2, 'mat', '["ROLE_USER"]', '$2y$13$VTVhzESYMPv9SD4HkUFmh.RgsXOIeTdooKOTfxjO0AVHoYcDCwe4C', 'mat091@hotmail.com', false, null, null),
+        (4, 'mat3', '["ROLE_USER"]', '$2y$13$QJwj7BVA.iEvNANjBuVocOjLsZUEmqbRmc.DNatzOJEo0n87qtOle', 'mat091@hotmail.com', true, null, null),
+        (3, 'mat2', '["ROLE_USER"]', '$2y$13$F4QfXU4dpkMZ56NTMpc3lOlTgX/Mph4DgqQmipLSv4J1lafQ6FcuO', 'mat091@hotmail.com', false, null, null),
+        (5, 'mat4', '["ROLE_USER"]', '$2y$13$CmGtlhUa2wtGasmO57a8deIXCf.ehs5.vSibnPhhdAh05vbqe7.Be', 'mat091@hotmail.com', true, null, null),
+        (7, 'mat6', '["ROLE_USER"]', '$2y$13$gT.kBKcC/VKD0p5ngNkQGuPZU8mFfTeFXhndRbGOxEP/gPiY8sxC6', 'mat091@hotmail.com', true, null, null),
+        (13, 'mat7', '["ROLE_USER"]', '$2y$13$aRYR91bSqaoqzNlmMdzkWu5amqWEM6HN77vZ9Y.hIPdF0qHQa2Kj2', 'mat091@hotmail.com', true, null, null),
+        (14, 'mat8', '["ROLE_USER"]', '$2y$13$egILi0/C.UHcLtMTCwuws.8W32CXXtJigNY2PIPmWbACN9SaEfM.K', 'mat.ortlieb@gmail.com', true, null, null),
+        (21, 'mat10', '["ROLE_USER"]', '$2y$13$LjUWqGX5jAzYDgnMZq8IvOwyfpvh.G00psE3JxlnwiSSw5OLbJ0NW', 'mat091@hotmail.com', false, null, null),
+        (22, 'mat11', '["ROLE_USER"]', '$2y$13$k95dFPeHVAi68wMESBLgE.kzoSr3ElfoKycCGVjV1NRc/J27TbQ8u', 'mat091@hotmail.com', false, 'f0c18fee5262be711fd7c62cd332eea2', '2022-03-27 23:35:10'),
+        (20, 'mat9', '["ROLE_USER"]', '$2y$13$D22qNO6QgUbWaxyUfrd2/elZmi0n7u/ZLv452Ccq.ERf7XVYUERVy', 'mat091@hotmail.com', true, '', '2022-04-01 11:47:19'),
+        (23, 'mat12', '["ROLE_USER"]', '$2y$13$kqfrSbMc9n6CWDqFTKsE..YweK739OgoPM3I/CA27erM5QOagQYpi', 'mat091@hotmail.com', false, null, null),
+        (24, 'mat13', '["ROLE_USER"]', '$2y$13$XTJGPT.dWJ4ueZMdbVMHz.5BQ8FpRHnbUYYWliVfE.aXYBzW/uLyS', 'mat091@hotmail.com', true, '', '2022-04-01 11:54:14'),
+        (25, 'test', '["ROLE_USER"]', '$2y$13$YbvzX5T6.0sM4EkHT48VWO/S/iI46Gge.2UUgNk26FkXJZ2fqMk9i', 'mat091@hotmail.com', true, '', '2022-04-17 16:39:04');

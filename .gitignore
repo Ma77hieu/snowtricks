@@ -21,7 +21,7 @@
 
 *.DS_Store
 
-public/uploads/
+public/uploads/images/*
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
