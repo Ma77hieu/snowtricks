@@ -173,13 +173,15 @@ class CommentService
         $commentToDelete = $commentRepository->find($commentId);
         $relatedTrickName = $commentToDelete->getTrick()->getName();
         $trickId = $commentToDelete->getTrick()->getId();
+        $slugger = new AsciiSlugger();
+        $slug = $slugger->slug($commentToDelete->getTrick()->getName());
         $this->em->remove($commentToDelete);
         $this->em->flush();
         $serviceReturn = ['returnType' => 'redirect',
             'path' => 'Trick.show',
             'flashType' => 'success',
             'flashMessage' => "le commentaire Id $commentId en lien avec le trick $relatedTrickName a été supprimé",
-            'data' => ['trickId' => $trickId]];
+            'data' => ['trickId' => $trickId, 'slug' => $slug]];
         return $serviceReturn;
     }
 }
