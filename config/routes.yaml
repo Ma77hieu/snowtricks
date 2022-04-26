@@ -63,7 +63,7 @@ Comment.update:
     controller: App\Controller\CommentsController::update
 
 Comment.delete:
-    path: /admin/deleteComment/{commentId}
+    path: /deleteComment/{commentId}
     controller: App\Controller\CommentsController::delete
 
 Media.create:
